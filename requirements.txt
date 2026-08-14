@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+sqlalchemy
+pymupdf
+sentence-transformers
+pydantic
+python-multipart
+qdrant-client
+ollama
+groq
+dotenv
+pypandoc

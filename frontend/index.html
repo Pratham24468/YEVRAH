@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YEVRAH</title>
+
+```
+<link rel="stylesheet" href="style.css">
+```
+
+</head>
+<body>
+
+<div class="sidebar">
+
+```
+<h1>YEVRAH</h1>
+
+<button onclick="showPage('dashboard')">Dashboard</button>
+
+<button onclick="showPage('cases')">Cases</button>
+
+<button onclick="showPage('templates')">Templates</button>
+
+<button onclick="showPage('upload')">Upload</button>
+
+<button onclick="showPage('generate')">Generate Draft</button>
+
+<button onclick="showPage('drafts')">Draft History</button>
+```
+
+</div>
+
+<div class="main-content">
+
+```
+<section id="dashboard" class="page active">
+    <h2>Dashboard</h2>
+
+    <div class="cards">
+
+        <div class="card">
+            <h3>Total Cases</h3>
+            <p id="caseCount">0</p>
+        </div>
+
+        <div class="card">
+            <h3>Total Templates</h3>
+            <p id="templateCount">0</p>
+        </div>
+
+        <div class="card">
+            <h3>Total Drafts</h3>
+            <p id="draftCount">0</p>
+        </div>
+
+    </div>
+</section>
+
+<section id="cases" class="page">
+
+    <h2>Cases</h2>
+
+    <input id="title" placeholder="Title">
+
+    <input id="plaintiff" placeholder="Plaintiff">
+
+    <input id="defendant" placeholder="Defendant">
+
+    <textarea id="facts" placeholder="Facts"></textarea>
+
+    <button onclick="createCase()">Create Case</button>
+
+    <button onclick="updateCase()">Update Case</button>
+
+    <table id="casesTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Plaintiff</th>
+                <th>Defendant</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody></tbody>
+    </table>
+
+</section>
+
+<section id="templates" class="page">
+
+    <h2>Templates</h2>
+
+    <input id="templateName" placeholder="Template Name">
+
+    <textarea id="templateContent"></textarea>
+
+    <button onclick="createTemplate()">Create Template</button>
+
+    <table id="templatesTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody></tbody>
+    </table>
+
+</section>
+
+<section id="upload" class="page">
+
+    <h2>Upload Legal Documents</h2>
+
+    <input type="file" id="fileInput">
+
+    <button onclick="uploadDocument()">Upload</button>
+
+    <pre id="uploadResult"></pre>
+
+</section>
+
+<section id="generate" class="page">
+
+    <h2>Generate Draft</h2>
+
+    <input id="generateCaseId" placeholder="Case ID">
+
+    <input id="generateTemplateId" placeholder="Template ID">
+
+    <button onclick="generateDraft()">Generate</button>
+
+    <button onclick="copyDraft()">Copy</button>
+
+    <button onclick="downloadDraft()">Download</button>
+
+    <textarea id="generatedDraft"></textarea>
+
+</section>
+
+<section id="drafts" class="page">
+
+    <h2>Draft History</h2>
+
+    <table id="draftsTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Case ID</th>
+                <th>Document Type</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody></tbody>
+    </table>
+
+</section>
+```
+
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>
