@@ -11,8 +11,7 @@ def get_all_prompts(db: Session):
 def create_prompt(prompt: PromptCreate, db: Session):
     new_prompt = Prompt(
     name=prompt.name,
-    content=prompt.content,
-    description=prompt.description
+    content=prompt.content
     )
     db.add(new_prompt)
     db.commit()
@@ -36,7 +35,6 @@ def update_prompt(
         return True
     prompt_up.name = prompt_data.name
     prompt_up.content = prompt_data.content
-    prompt_up.description = prompt_data.description
     db.commit()
     db.refresh(prompt_up)
     return prompt_up

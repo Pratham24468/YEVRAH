@@ -5,7 +5,7 @@ from database import Base, engine
 from model_db.case_model import Case
 from model_db.template_model import Template
 from model_db.draft_model import Draft
-from model_db.prompt import Prompt
+from model_db.prompt_model import Prompt
 
 from routes.upload import router as upload_router
 from routes.cases import router as case_router

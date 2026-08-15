@@ -1,173 +1,86 @@
-<!DOCTYPE html>
-
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YEVRAH</title>
-
-```
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>YEVRAH — Legal Drafting</title>
 <link rel="stylesheet" href="style.css">
-```
-
 </head>
 <body>
+<aside class="sidebar">
+  <div class="brand"><div class="mark">Y</div><div><b>YEVRAH</b><small>Legal Drafting Engine</small></div></div>
+  <nav>
+    <button class="nav active" data-page="dashboard">⌂ Dashboard</button>
+    <button class="nav" data-page="cases">▣ Cases</button>
+    <button class="nav" data-page="templates">▤ Templates</button>
+    <button class="nav" data-page="prompts">✦ Prompt Management</button>
+    <button class="nav" data-page="upload">↑ Knowledge Upload</button>
+    <button class="nav" data-page="generate">✎ Generate Draft</button>
+    <button class="nav" data-page="drafts">◫ Draft History</button>
+  </nav>
+  <div class="api"><span id="dot"></span><span id="apiStatus">Checking API…</span><small>127.0.0.1:8000</small></div>
+</aside>
 
-<div class="sidebar">
+<main>
+<header><div><small>YEVRAH WORKSPACE</small><h1 id="title">Dashboard</h1></div><button class="primary" id="newDraft">+ New Draft</button></header>
+<div id="toast"></div>
 
-```
-<h1>YEVRAH</h1>
-
-<button onclick="showPage('dashboard')">Dashboard</button>
-
-<button onclick="showPage('cases')">Cases</button>
-
-<button onclick="showPage('templates')">Templates</button>
-
-<button onclick="showPage('upload')">Upload</button>
-
-<button onclick="showPage('generate')">Generate Draft</button>
-
-<button onclick="showPage('drafts')">Draft History</button>
-```
-
-</div>
-
-<div class="main-content">
-
-```
 <section id="dashboard" class="page active">
-    <h2>Dashboard</h2>
-
-    <div class="cards">
-
-        <div class="card">
-            <h3>Total Cases</h3>
-            <p id="caseCount">0</p>
-        </div>
-
-        <div class="card">
-            <h3>Total Templates</h3>
-            <p id="templateCount">0</p>
-        </div>
-
-        <div class="card">
-            <h3>Total Drafts</h3>
-            <p id="draftCount">0</p>
-        </div>
-
+  <div class="hero"><div><span>AI-assisted legal drafting</span><h2>Turn case material into a usable first draft.</h2><p>Select a case, firm template and controlled drafting prompt. Generate, review, iterate and export.</p></div><button onclick="showPage('generate')">Generate a draft →</button></div>
+  <div class="stats">
+    <div><small>Cases</small><b id="caseCount">—</b></div><div><small>Templates</small><b id="templateCount">—</b></div>
+    <div><small>Prompts</small><b id="promptCount">—</b></div><div><small>Drafts</small><b id="draftCount">—</b></div>
+  </div>
+  <div class="columns">
+    <div class="panel"><h3>Draft workflow</h3><p class="muted">Simple, repeatable and lawyer-controlled.</p>
+      <ol class="steps"><li><b>01</b><span><strong>Select case</strong>Use the saved matter and facts.</span></li><li><b>02</b><span><strong>Choose template</strong>Preserve the firm's structure.</span></li><li><b>03</b><span><strong>Choose prompt</strong>Apply controlled drafting instructions.</span></li><li><b>04</b><span><strong>Generate & export</strong>Review, iterate and export DOCX.</span></li></ol>
     </div>
+    <div class="panel"><h3>Quick actions</h3><p class="muted">Jump directly into your workflow.</p>
+      <div class="quick"><button onclick="showPage('cases')">+ Create case</button><button onclick="showPage('templates')">+ Add template</button><button onclick="showPage('prompts')">+ Create prompt</button><button onclick="showPage('upload')">↑ Upload document</button></div>
+    </div>
+  </div>
 </section>
 
 <section id="cases" class="page">
-
-    <h2>Cases</h2>
-
-    <input id="title" placeholder="Title">
-
-    <input id="plaintiff" placeholder="Plaintiff">
-
-    <input id="defendant" placeholder="Defendant">
-
-    <textarea id="facts" placeholder="Facts"></textarea>
-
-    <button onclick="createCase()">Create Case</button>
-
-    <button onclick="updateCase()">Update Case</button>
-
-    <table id="casesTable">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Title</th>
-                <th>Plaintiff</th>
-                <th>Defendant</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-
-        <tbody></tbody>
-    </table>
-
+  <div class="section"><div><h2>Cases</h2><p>Manage matters used for drafting.</p></div><button class="secondary" onclick="resetCase()">Clear</button></div>
+  <div class="panel form">
+    <input type="hidden" id="caseId">
+    <div class="grid"><label>Case title<input id="caseTitle" placeholder="e.g. Singh v. Mehta"></label><label>Plaintiff<input id="plaintiff" placeholder="Plaintiff / Petitioner"></label><label>Defendant<input id="defendant" placeholder="Defendant / Respondent"></label><label class="wide">Case facts<textarea id="facts" placeholder="Material facts for this matter…"></textarea></label></div>
+    <button class="primary right" onclick="saveCase()">Save case</button>
+  </div>
+  <div class="panel"><h3>Saved cases</h3><p class="muted" id="caseMeta"></p><div class="table"><table><thead><tr><th>ID</th><th>Case</th><th>Plaintiff</th><th>Defendant</th><th>Actions</th></tr></thead><tbody id="casesBody"></tbody></table></div></div>
 </section>
 
 <section id="templates" class="page">
+  <div class="section"><div><h2>Templates</h2><p>Store the firm's drafting structure and style.</p></div><button class="secondary" onclick="resetTemplate()">Clear</button></div>
+  <div class="panel form"><label>Template name<input id="templateName" placeholder="e.g. Written Statement"></label><label>Template content<textarea id="templateContent" class="large" placeholder="Paste the firm's preferred template…"></textarea></label><button class="primary right" onclick="saveTemplate()">Save template</button></div>
+  <div class="panel"><h3>Firm templates</h3><div class="table"><table><thead><tr><th>ID</th><th>Name</th><th>Actions</th></tr></thead><tbody id="templatesBody"></tbody></table></div></div>
+</section>
 
-    <h2>Templates</h2>
-
-    <input id="templateName" placeholder="Template Name">
-
-    <textarea id="templateContent"></textarea>
-
-    <button onclick="createTemplate()">Create Template</button>
-
-    <table id="templatesTable">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-
-        <tbody></tbody>
-    </table>
-
+<section id="prompts" class="page">
+  <div class="section"><div><h2>Prompt Management</h2><p>Create reusable drafting instructions without changing application code.</p></div><button class="secondary" onclick="resetPrompt()">Clear</button></div>
+  <div class="panel form"><input type="hidden" id="promptId"><label>Prompt name<input id="promptName" placeholder="e.g. Conservative Civil Drafting"></label><label>Drafting instructions<textarea id="promptContent" class="large" placeholder="Tell YEVRAH how the document should be written and structured…"></textarea></label><p class="hint">The backend combines this prompt with the selected case, template and retrieved authorities.</p><button class="primary right" onclick="savePrompt()">Save prompt</button></div>
+  <div class="panel"><h3>Saved prompts</h3><div id="promptsList" class="promptList"></div></div>
 </section>
 
 <section id="upload" class="page">
-
-    <h2>Upload Legal Documents</h2>
-
-    <input type="file" id="fileInput">
-
-    <button onclick="uploadDocument()">Upload</button>
-
-    <pre id="uploadResult"></pre>
-
+  <div class="section"><div><h2>Knowledge Upload</h2><p>Add legal documents to the retrieval system.</p></div></div>
+  <div class="panel upload"><div class="uploadIcon">↑</div><h3>Upload a legal document</h3><p>Choose a file and send it to the existing <code>/upload</code> endpoint.</p><input type="file" id="fileInput"><button class="primary" onclick="uploadDocument()">Upload document</button><pre id="uploadResult"></pre></div>
 </section>
 
 <section id="generate" class="page">
-
-    <h2>Generate Draft</h2>
-
-    <input id="generateCaseId" placeholder="Case ID">
-
-    <input id="generateTemplateId" placeholder="Template ID">
-
-    <button onclick="generateDraft()">Generate</button>
-
-    <button onclick="copyDraft()">Copy</button>
-
-    <button onclick="downloadDraft()">Download</button>
-
-    <textarea id="generatedDraft"></textarea>
-
+  <div class="section"><div><h2>Generate Draft</h2><p>Controlled generation: case + template + prompt.</p></div></div>
+  <div class="generate">
+    <div class="panel"><label>Case<select id="genCase"></select></label><label>Firm template<select id="genTemplate"></select></label><label>Drafting prompt<select id="genPrompt"></select></label><div class="hint">YEVRAH will use the selected configuration and your backend RAG pipeline.</div><button id="genBtn" class="primary full" onclick="generateDraft()">Generate draft</button></div>
+    <div class="panel draft"><div class="draftHead"><div><h3>Generated draft</h3><p id="draftStatus" class="muted">Nothing generated yet.</p></div><div><button class="secondary" onclick="copyDraft()">Copy</button> <button class="secondary" onclick="exportCurrent()">Export DOCX</button></div></div><textarea id="draftText" placeholder="Your generated draft will appear here…"></textarea></div>
+  </div>
 </section>
 
 <section id="drafts" class="page">
-
-    <h2>Draft History</h2>
-
-    <table id="draftsTable">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Case ID</th>
-                <th>Document Type</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-
-        <tbody></tbody>
-    </table>
-
+  <div class="section"><div><h2>Draft History</h2><p>Review generated drafts and export them.</p></div></div>
+  <div class="panel"><div class="table"><table><thead><tr><th>ID</th><th>Case</th><th>Document type</th><th>Actions</th></tr></thead><tbody id="draftsBody"></tbody></table></div></div>
 </section>
-```
-
-</div>
-
-<script src="app.js"></script>
-
+</main>
+<script src="./app.js" defer></script>
 </body>
 </html>

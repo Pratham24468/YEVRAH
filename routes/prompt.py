@@ -24,7 +24,7 @@ def get_prompt(
     db: Session = Depends(get_db)
 ):
     result = prompt_service.view_prompt(prompt_id, db)
-    if result is True:
+    if result is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Prompt not found"
