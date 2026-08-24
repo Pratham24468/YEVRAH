@@ -8,6 +8,11 @@ router = APIRouter()
 
 @router.post("/upload")
 async def upload_pdf(
+    knowledge_type: str,
+    document_type: str,
+    practice_area: str,
+    jurisdiction: str,
+    case_id: int | None = None,
     file: UploadFile = File(...)
 ):
     contents = await file.read()
@@ -21,20 +26,21 @@ async def upload_pdf(
     pdf_path = f"uploads/precedents/{file.filename}"
 
     text = extract_text_from_pdf(pdf_path)
-    print("Text Extracted")
 
     chunks = chunk_text(text)
-    print(f"Chunks: {len(chunks)}")
 
     embeddings = generate_embeddings(chunks)
-    print(f"Embeddings: {len(embeddings)}")
-
+    
     store_embeddings(
-        chunks,
-        embeddings,
-        file.filename
+        embeddings=embeddings,
+        chunks=chunks,
+        source=file.filename,
+        knowledge_type=knowledge_type,
+        document_type=document_type,
+        practice_area=practice_area,
+        jurisdiction=jurisdiction,
+        case_id=case_id,
     )
-    print("Stored in Qdrant")
 
     return {
         "filename": file.filename,

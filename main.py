@@ -12,6 +12,7 @@ from routes.cases import router as case_router
 from routes.templates import router as template_router
 from routes.drafts import router as draft_router
 from routes.generate_route import router as generate_router
+from routes.prompt import router as prompt_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -32,3 +33,4 @@ app.include_router(case_router)
 app.include_router(template_router)
 app.include_router(draft_router)
 app.include_router(generate_router)
+app.include_router(prompt_router)

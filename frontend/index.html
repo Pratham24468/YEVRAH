@@ -64,8 +64,19 @@
 </section>
 
 <section id="upload" class="page">
-  <div class="section"><div><h2>Knowledge Upload</h2><p>Add legal documents to the retrieval system.</p></div></div>
-  <div class="panel upload"><div class="uploadIcon">↑</div><h3>Upload a legal document</h3><p>Choose a file and send it to the existing <code>/upload</code> endpoint.</p><input type="file" id="fileInput"><button class="primary" onclick="uploadDocument()">Upload document</button><pre id="uploadResult"></pre></div>
+  <div class="section"><div><h2>Knowledge Upload</h2><p>Upload legal knowledge and classify it so YEVRAH can retrieve the right material during drafting.</p></div></div>
+  <div class="panel form">
+    <div class="uploadDrop"><div class="uploadIcon">↑</div><div><h3>Add legal knowledge</h3><p class="muted">The metadata below is stored with the uploaded document and used by the RAG retriever.</p><input type="file" id="fileInput"></div></div>
+    <div class="grid">
+      <label>Case ID<input id="uploadCaseId" type="number" min="1" placeholder="Optional — e.g. 12"><small class="fieldHelp">Use this when the document belongs to a specific case.</small></label>
+      <label>Knowledge Types<select id="uploadKnowledgeTypes" multiple size="5"><option value="drafting_style">Drafting Style</option><option value="precedent">Precedent</option><option value="legal_principle">Legal Principle</option><option value="statute">Statute / Provision</option><option value="case_law">Case Law</option><option value="firm_knowledge">Firm Knowledge</option><option value="other">Other</option></select><small class="fieldHelp">Hold Ctrl/Cmd to select more than one.</small></label>
+      <label>Document Type<input id="uploadDocumentType" placeholder="e.g. legal_notice, plaint, judgment"><small class="fieldHelp">Use the document type used by your RAG metadata.</small></label>
+      <label>Practice Area<input id="uploadPracticeArea" placeholder="e.g. contract, civil, property"></label>
+      <label>Jurisdiction<input id="uploadJurisdiction" value="india" placeholder="e.g. india"></label>
+    </div>
+    <div class="uploadActions"><button class="primary" onclick="uploadDocument()">Upload to Knowledge Base</button><span class="muted">Sends <code>case_id</code>, <code>knowledge_types</code>, <code>document_type</code>, <code>practice_area</code>, and <code>jurisdiction</code>.</span></div>
+    <pre id="uploadResult"></pre>
+  </div>
 </section>
 
 <section id="generate" class="page">
@@ -81,6 +92,6 @@
   <div class="panel"><div class="table"><table><thead><tr><th>ID</th><th>Case</th><th>Document type</th><th>Actions</th></tr></thead><tbody id="draftsBody"></tbody></table></div></div>
 </section>
 </main>
-<script src="./app.js" defer></script>
+<script src="app.js"></script>
 </body>
 </html>

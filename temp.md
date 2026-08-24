@@ -1,34 +1,41 @@
-# DEMAND NOTICE
+**Date:** ____/____/2023  
 
-# BY R. P. A. D
+**To,**  
 
-Date :- [Information Required]
+[Addressee Name]  
+[Designation]  
+[Company / Entity]  
+[Address]  
 
-To,
-Mrs. [Landlord's Name] 
-C/o [Landlord's Address].
+---
 
-       Under the instructions from and on behalf of my client M/s [Tenant's Name] through its Partner / authorized representative [Authorized Representative's Name], having Reg. Office at [Reg. Office Address], I have to address you as under :-
+**Subject:** Legal Notice for Recovery of Dues  
 
-1.     My client states that you addressee is liable and responsible to pay the amount of INR [Total Amount Owed] (INR [Total Amount Owed] Only ) to my client along with further future interest @18 % p. a. on the principal amount of INR [Unpaid Rent] from the date of dues of my client.
+---
 
-2.	You addressee failed to pay dues of my client. By your aforesaid conduct, it is obvious that you did not intend to make the payment of the said amount to my client.
+Under the instructions from and on behalf of my client **[Client Name]** through its Partner / authorized representative **Mr. [Partner Name]**, having its registered office at **[Client Registered Office Address]**, I address you as under :
 
-3.	Under the circumstances, I hereby call upon you to make the payment of  INR  [Total Amount Owed] (INR [Total Amount Owed] Only ) along with further interest @ 18 p.a. within 15 days from the date of receipt of this Demand Notice by you, failing which I have definite instructions from my client to take necessary legal action against you in the competent court of law, & in that event, you shall be liable for all the costs & consequences resulting therefrom. 
+1. My client states that you, the addressee, are liable and responsible to pay the amount of **INR [Principal Amount]** (INR [Principal Amount in Words] Only) to my client, together with further interest at the rate of **18 % per annum** on the principal amount of **INR [Principal Amount]** from the date on which the dues became payable.
 
-4.       As per the registered Lease Agreement duly signed by you and registered with registrar under [Lease Agreement Details], payment of rent is the essence of the contract, and as per the same you are liable to pay monthly rent of INR [Monthly Rent] due on the 1st of each month.
+2. You have failed to pay the aforesaid dues. By such conduct it is evident that you have no intention to discharge the liability owed to my client.
 
-5.	In addition to that, on remaining default my client shall be left with no option but to proceed with the Civil & Criminal case under Sections [Applicable Sections] as they may be so advised entirely at your risk as to the costs and consequences thereof.
+3. In view of the foregoing, I hereby call upon you to make payment of **INR [Demanded Amount]** (INR [Demanded Amount in Words] Only) along with interest @ 18 % p.a. within **15 days** from the date of receipt of this notice. Failing which, I have definite instructions from my client to institute appropriate legal proceedings against you in the competent court of law. In such an event, you shall be liable for all costs and consequences arising therefrom.
 
-6.	In addition to the aforesaid, failure to make payment of the said sum to my client will be compelled to file a Civil Suit for recovery of amount along with interest till realization of full and final amount as well as Criminal complaint against you and seek your conviction as aforesaid.
+4. As per the registered agreement duly signed by you and registered with the Registrar, **clause no. [Clause Number]** stipulates that payment of dues is the essence of the contract. Accordingly, you are liable to pay the yearly maintenance and any other charges on demand.
 
-7.	You are also liable to pay a sum of Rs.[Late Fees] towards charges for the present notice.
+5. You are liable to pay interest to my client on the principal amount until full and final realization of the amount, together with the stipulated interest. In addition, for the remaining default, my client shall be compelled to pursue civil and criminal actions under **Sections 420 and 406 of the Indian Penal Code**, as may be advised, at your risk as to costs and consequences thereof.
 
-8.	Please note that the notice trigger was not met as no rent was received by the 6th of March, and follow-up attempts (calls/texts) were unanswered.
+6. Further, failure to make payment of the said sum will leave my client with no alternative but to file a civil suit for recovery of the amount along with interest till full realization, as well as a criminal complaint against you seeking conviction as aforesaid.
 
-9.	You are requested to confirm receipt of this Demand Notice.
+7. You are also liable to pay a sum of **Rs. 7,000/-** towards charges for the present notice.
 
-                                                                               [Firm's Name]
-          
-                                                                                        [Authorized Representative's Name]
-                                                                               Advocate
+---
+
+**[Law Firm Name]**  
+
+**[Advocate’s Name]**  
+Advocate, Bombay High Court  
+
+---  
+
+*Prepared for lawyer’s review.*

@@ -1,4 +1,4 @@
-const API = "http://127.0.0.1:8000";
+const API="http://127.0.0.1:8000";
 let cases=[],templates=[],prompts=[],drafts=[],currentDraftId=null,currentCaseId=null,currentPromptId=null;
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
@@ -32,5 +32,25 @@ async function exportCurrent(){if(!currentDraftId)return toast("Generate or open
 async function exportDraft(id){try{await exportFile(id);toast("DOCX exported.")}catch(e){toast(e.message)}}
 async function openDraft(id){try{const d=await api(`/drafts/${id}`);currentDraftId=id;$("draftText").value=d.generated_text??d.content??d.draft_text??d.text??"";$("draftStatus").textContent=`Draft #${id}`;showPage("generate")}catch(e){toast(e.message)}}
 async function deleteDraft(id){if(!confirm("Delete this draft?"))return;try{await api(`/draft/${id}`,{method:"DELETE"});toast("Draft deleted.");load()}catch(e){toast(e.message)}}
-async function uploadDocument(){const f=$("fileInput").files[0];if(!f)return toast("Choose a file first.");const fd=new FormData();fd.append("file",f);try{const r=await api("/upload",{method:"POST",body:fd});$("uploadResult").textContent=JSON.stringify(r,null,2);toast("Document uploaded.")}catch(e){$("uploadResult").textContent=e.message;toast(e.message)}}
+async function uploadDocument(){
+  const f=$("fileInput").files[0];
+  if(!f)return toast("Choose a file first.");
+  const knowledgeTypes=Array.from($("uploadKnowledgeTypes").selectedOptions).map(o=>o.value);
+  const documentType=$("uploadDocumentType").value.trim();
+  const practiceArea=$("uploadPracticeArea").value.trim();
+  const jurisdiction=$("uploadJurisdiction").value.trim()||"india";
+  const caseId=$("uploadCaseId").value.trim();
+  if(!knowledgeTypes.length)return toast("Select at least one knowledge type.");
+  if(!documentType)return toast("Document type is required.");
+  if(!practiceArea)return toast("Practice area is required.");
+  const fd=new FormData();
+  fd.append("file",f);
+  if(caseId)fd.append("case_id",caseId);
+  knowledgeTypes.forEach(type=>fd.append("knowledge_types",type));
+  fd.append("document_type",documentType);
+  fd.append("practice_area",practiceArea);
+  fd.append("jurisdiction",jurisdiction);
+  $("uploadResult").textContent="Uploading and indexing…";
+  try{const r=await api("/upload",{method:"POST",body:fd});$("uploadResult").textContent=JSON.stringify(r,null,2);toast("Document uploaded and indexed.")}catch(e){$("uploadResult").textContent=e.message;toast(e.message)}
+}
 load();

@@ -1,35 +1,58 @@
-from qdrant_client import QdrantClient
-from qdrant_client.models import PointStruct
-import uuid
 import os
 from dotenv import load_dotenv
+from qdrant_client import QdrantClient
+from qdrant_client.models import Distance, VectorParams, PointStruct
+from uuid import uuid4
 
 load_dotenv()
 
+COLLECTION_NAME = "YEVRAH"
+
+QDRANT_URL = os.getenv("QDRANT_URL")
+QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
+
 client = QdrantClient(
-    url=os.getenv("QDRANT_URL"),
-    api_key=os.getenv("QDRANT_API_KEY"),
+    url=QDRANT_URL,
+    api_key=QDRANT_API_KEY,
 )
 
+
 def store_embeddings(
-    chunks,
     embeddings,
-    source
+    chunks,
+    source,
+    knowledge_type="case_document",
+    document_type=None,
+    practice_area=None,
+    jurisdiction="india",
+    firm_id=None,
+    case_id=None,
 ):
     points = []
 
-    for chunk, embedding in zip(chunks, embeddings):
-        point = PointStruct(
-            id=str(uuid.uuid4()),
-            vector=embedding,
-            payload={
-                "text": chunk,
-                "source": source
-            }
+    for (embedding, chunk) in zip(embeddings, chunks):
+        points.append(
+            PointStruct(
+                id=str(uuid4()),
+                vector=embedding,
+                payload={
+                    "text": chunk,
+                    "source": source,
+
+                    # Knowledge classification
+                    "knowledge_type": knowledge_type,
+                    "document_type": document_type,
+                    "practice_area": practice_area,
+                    "jurisdiction": jurisdiction,
+
+                    # Isolation
+                    "firm_id": firm_id,
+                    "case_id": case_id,
+                },
+            )
         )
-        points.append(point)
 
     client.upsert(
-        collection_name="YEVRAH",
-        points=points
+        collection_name=COLLECTION_NAME,
+        points=points,
     )

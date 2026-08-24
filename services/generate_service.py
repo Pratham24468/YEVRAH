@@ -10,29 +10,57 @@ from services.prompt_service import view_prompt
 
 
 def generate_draft(case_id, template_id, prompt_id, db: Session):
-
     case = get_case_by_id(case_id, db)
     template = get_template_by_id(template_id, db)
     prompt_record = view_prompt(prompt_id, db)
 
+    if not case:
+        raise ValueError("Case not found")
+
+    if not template:
+        raise ValueError("Template not found")
+
     if not prompt_record:
         raise ValueError("Prompt not found")
 
-    query = (
-        case.title +
-        " " +
-        case.defendant +
-        " " +
-        case.facts
+    # The case remains the source of truth for facts.
+    query = " ".join(
+        str(value)
+        for value in [
+            case.title,
+            case.plaintiff,
+            case.defendant,
+            case.facts,
+            template.name,
+        ]
+        if value
     )
 
-    payloads = retrieve_chunks(query)
+    # Retrieve Indian drafting/legal knowledge using the metadata now
+    # attached to uploaded knowledge. Case-specific material is isolated
+    # with case_id; general firm knowledge is retrieved by the other filters.
+    knowledge_types = [
+        "drafting_style",
+        "precedent",
+        "legal_principle",
+        "statute",
+        "case_law",
+    ]
+
+    payloads = retrieve_chunks(
+        query=query,
+        case_id=case_id,
+        knowledge_types=knowledge_types,
+        document_type=template.name,
+        jurisdiction="india",
+        limit=8,
+    )
 
     prompt = build_prompt(
-        case,
-        template,
-        payloads,
-        prompt_record.content
+        case_details=case,
+        template=template,
+        retrieved_payloads=payloads,
+        custom_prompt=prompt_record.content,
     )
 
     draft_text = generate_response(prompt)
@@ -43,6 +71,4 @@ def generate_draft(case_id, template_id, prompt_id, db: Session):
         generated_text=draft_text,
     )
 
-    saved_draft = create_draft(draft, db)
-
-    return saved_draft
+    return create_draft(draft, db)
