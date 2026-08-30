@@ -53,8 +53,26 @@
 
 <section id="templates" class="page">
   <div class="section"><div><h2>Templates</h2><p>Store the firm's drafting structure and style.</p></div><button class="secondary" onclick="resetTemplate()">Clear</button></div>
-  <div class="panel form"><label>Template name<input id="templateName" placeholder="e.g. Written Statement"></label><label>Template content<textarea id="templateContent" class="large" placeholder="Paste the firm's preferred template…"></textarea></label><button class="primary right" onclick="saveTemplate()">Save template</button></div>
-  <div class="panel"><h3>Firm templates</h3><div class="table"><table><thead><tr><th>ID</th><th>Name</th><th>Actions</th></tr></thead><tbody id="templatesBody"></tbody></table></div></div>
+  <div class="panel form">
+    <div class="grid">
+      <label>Template name<input id="templateName" placeholder="e.g. Money Recovery Legal Notice"></label>
+      <label>Document type<input id="templateDocumentType" placeholder="e.g. Legal Notice"></label>
+    </div>
+    <div id="templateDropZone" class="uploadDrop templateDropZone">
+      <div class="uploadIcon">↑</div>
+      <div>
+        <strong>Drop your template here</strong>
+        <p class="muted">or choose a file from your computer</p>
+        <input type="file" id="templateFile" accept=".docx">
+        <span id="templateFileName" class="fieldHelp">DOCX files only</span>
+      </div>
+    </div>
+    <div class="uploadActions">
+      <button type="button" class="primary" id="templateUploadBtn" onclick="saveTemplate()">Upload Template</button>
+      <span id="templateUploadStatus" class="muted"></span>
+    </div>
+  </div>
+  <div class="panel"><h3>Firm templates</h3><div class="table"><table><thead><tr><th>ID</th><th>Name</th><th>Document Type</th><th>Actions</th></tr></thead><tbody id="templatesBody"></tbody></table></div></div>
 </section>
 
 <section id="prompts" class="page">

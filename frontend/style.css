@@ -5,3 +5,8 @@
 .uploadActions{display:flex;align-items:center;gap:16px;margin-top:20px;flex-wrap:wrap}
 .uploadActions .muted{font-size:12px}
 #uploadKnowledgeTypes{min-height:120px}
+
+.templateDropZone { cursor: pointer; transition: .2s ease; }
+.templateDropZone.dragging { border-color: #3157d5; background: #f0f3ff; transform: scale(1.01); }
+
+.templateDropZone input[type=file]{cursor:pointer}
