@@ -13,7 +13,7 @@ class draft_state(TypedDict):
 
     # Agent-processed Understanding
     case_facts: dict
-    template_blueprint: dict
+    parameterized_template: str
 
     # Later Stages
     document_plan: dict
@@ -24,4 +24,3 @@ class draft_state(TypedDict):
     # Control
     current_section: int
     revision_count: int
-    status: str

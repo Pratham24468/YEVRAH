@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>YEVRAH — Legal Drafting</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<aside class="sidebar">
+  <div class="brand"><div class="mark">Y</div><div><b>YEVRAH</b><small>Legal Drafting Engine</small></div></div>
+  <nav>
+    <button class="nav active" data-page="dashboard">⌂ Dashboard</button>
+    <button class="nav" data-page="cases">▣ Cases</button>
+    <button class="nav" data-page="templates">▤ Templates</button>
+    <button class="nav" data-page="prompts">✦ Prompt Management</button>
+    <button class="nav" data-page="upload">↑ Knowledge Upload</button>
+    <button class="nav" data-page="generate">✎ Generate Draft</button>
+    <button class="nav" data-page="drafts">◫ Draft History</button>
+  </nav>
+  <div class="api"><span id="dot"></span><span id="apiStatus">Checking API…</span><small>127.0.0.1:8000</small></div>
+</aside>
+
+<main>
+<header><div><small>YEVRAH WORKSPACE</small><h1 id="title">Dashboard</h1></div><button class="primary" id="newDraft">+ New Draft</button></header>
+<div id="toast"></div>
+
+<section id="dashboard" class="page active">
+  <div class="hero"><div><span>AI-assisted legal drafting</span><h2>Turn case material into a usable first draft.</h2><p>Select a case, firm template and controlled drafting prompt. Generate, review, iterate and export.</p></div><button onclick="showPage('generate')">Generate a draft →</button></div>
+  <div class="stats">
+    <div><small>Cases</small><b id="caseCount">—</b></div><div><small>Templates</small><b id="templateCount">—</b></div>
+    <div><small>Prompts</small><b id="promptCount">—</b></div><div><small>Drafts</small><b id="draftCount">—</b></div>
+  </div>
+  <div class="columns">
+    <div class="panel"><h3>Draft workflow</h3><p class="muted">Simple, repeatable and lawyer-controlled.</p>
+      <ol class="steps"><li><b>01</b><span><strong>Select case</strong>Use the saved matter and facts.</span></li><li><b>02</b><span><strong>Choose template</strong>Preserve the firm's structure.</span></li><li><b>03</b><span><strong>Choose prompt</strong>Apply controlled drafting instructions.</span></li><li><b>04</b><span><strong>Generate & export</strong>Review, iterate and export DOCX.</span></li></ol>
+    </div>
+    <div class="panel"><h3>Quick actions</h3><p class="muted">Jump directly into your workflow.</p>
+      <div class="quick"><button onclick="showPage('cases')">+ Create case</button><button onclick="showPage('templates')">+ Add template</button><button onclick="showPage('prompts')">+ Create prompt</button><button onclick="showPage('upload')">↑ Upload document</button></div>
+    </div>
+  </div>
+</section>
+
+<section id="cases" class="page">
+  <div class="section"><div><h2>Cases</h2><p>Manage matters used for drafting.</p></div><button class="secondary" onclick="resetCase()">Clear</button></div>
+  <div class="panel form">
+    <input type="hidden" id="caseId">
+    <div class="grid"><label>Case title<input id="caseTitle" placeholder="e.g. Singh v. Mehta"></label><label>Plaintiff<input id="plaintiff" placeholder="Plaintiff / Petitioner"></label><label>Defendant<input id="defendant" placeholder="Defendant / Respondent"></label><label class="wide">Case facts<textarea id="facts" placeholder="Material facts for this matter…"></textarea></label></div>
+    <button class="primary right" onclick="saveCase()">Save case</button>
+  </div>
+  <div class="panel"><h3>Saved cases</h3><p class="muted" id="caseMeta"></p><div class="table"><table><thead><tr><th>ID</th><th>Case</th><th>Plaintiff</th><th>Defendant</th><th>Actions</th></tr></thead><tbody id="casesBody"></tbody></table></div></div>
+</section>
+
+<section id="templates" class="page">
+  <div class="section"><div><h2>Templates</h2><p>Store the firm's drafting structure and style.</p></div><button class="secondary" onclick="resetTemplate()">Clear</button></div>
+  <div class="panel form">
+    <div class="grid">
+      <label>Template name<input id="templateName" placeholder="e.g. Money Recovery Legal Notice"></label>
+      <label>Document type<input id="templateDocumentType" placeholder="e.g. Legal Notice"></label>
+    </div>
+    <div id="templateDropZone" class="uploadDrop templateDropZone">
+      <div class="uploadIcon">↑</div>
+      <div>
+        <strong>Drop your template here</strong>
+        <p class="muted">or choose a file from your computer</p>
+        <input type="file" id="templateFile" accept=".docx">
+        <span id="templateFileName" class="fieldHelp">DOCX files only</span>
+      </div>
+    </div>
+    <div class="uploadActions">
+      <button type="button" class="primary" id="templateUploadBtn" onclick="saveTemplate()">Upload Template</button>
+      <span id="templateUploadStatus" class="muted"></span>
+    </div>
+  </div>
+  <div class="panel"><h3>Firm templates</h3><div class="table"><table><thead><tr><th>ID</th><th>Name</th><th>Document Type</th><th>Actions</th></tr></thead><tbody id="templatesBody"></tbody></table></div></div>
+</section>
+
+<section id="prompts" class="page">
+  <div class="section"><div><h2>Prompt Management</h2><p>Create reusable drafting instructions without changing application code.</p></div><button class="secondary" onclick="resetPrompt()">Clear</button></div>
+  <div class="panel form"><input type="hidden" id="promptId"><label>Prompt name<input id="promptName" placeholder="e.g. Conservative Civil Drafting"></label><label>Drafting instructions<textarea id="promptContent" class="large" placeholder="Tell YEVRAH how the document should be written and structured…"></textarea></label><p class="hint">The backend combines this prompt with the selected case, template and retrieved authorities.</p><button class="primary right" onclick="savePrompt()">Save prompt</button></div>
+  <div class="panel"><h3>Saved prompts</h3><div id="promptsList" class="promptList"></div></div>
+</section>
+
+<section id="upload" class="page">
+  <div class="section"><div><h2>Knowledge Upload</h2><p>Upload legal knowledge and classify it so YEVRAH can retrieve the right material during drafting.</p></div></div>
+  <div class="panel form">
+    <div class="uploadDrop"><div class="uploadIcon">↑</div><div><h3>Add legal knowledge</h3><p class="muted">The metadata below is stored with the uploaded document and used by the RAG retriever.</p><input type="file" id="fileInput"></div></div>
+    <div class="grid">
+      <label>Case ID<input id="uploadCaseId" type="number" min="1" placeholder="Optional — e.g. 12"><small class="fieldHelp">Use this when the document belongs to a specific case.</small></label>
+      <label>Knowledge Types<select id="uploadKnowledgeTypes" multiple size="5"><option value="drafting_style">Drafting Style</option><option value="precedent">Precedent</option><option value="legal_principle">Legal Principle</option><option value="statute">Statute / Provision</option><option value="case_law">Case Law</option><option value="firm_knowledge">Firm Knowledge</option><option value="other">Other</option></select><small class="fieldHelp">Hold Ctrl/Cmd to select more than one.</small></label>
+      <label>Document Type<input id="uploadDocumentType" placeholder="e.g. legal_notice, plaint, judgment"><small class="fieldHelp">Use the document type used by your RAG metadata.</small></label>
+      <label>Practice Area<input id="uploadPracticeArea" placeholder="e.g. contract, civil, property"></label>
+      <label>Jurisdiction<input id="uploadJurisdiction" value="india" placeholder="e.g. india"></label>
+    </div>
+    <div class="uploadActions"><button class="primary" onclick="uploadDocument()">Upload to Knowledge Base</button><span class="muted">Sends <code>case_id</code>, <code>knowledge_types</code>, <code>document_type</code>, <code>practice_area</code>, and <code>jurisdiction</code>.</span></div>
+    <pre id="uploadResult"></pre>
+  </div>
+</section>
+
+<section id="generate" class="page">
+  <div class="section"><div><h2>Generate Draft</h2><p>Controlled generation: case + template + prompt.</p></div></div>
+  <div class="generate">
+    <div class="panel"><label>Case<select id="genCase"></select></label><label>Firm template<select id="genTemplate"></select></label><label>Drafting prompt<select id="genPrompt"></select></label><div class="hint">YEVRAH will use the selected configuration and your backend RAG pipeline.</div><button id="genBtn" class="primary full" onclick="generateDraft()">Generate draft</button></div>
+    <div class="panel draft"><div class="draftHead"><div><h3>Generated draft</h3><p id="draftStatus" class="muted">Nothing generated yet.</p></div><div><button class="secondary" onclick="copyDraft()">Copy</button> <button class="secondary" onclick="exportCurrent()">Export DOCX</button></div></div><textarea id="draftText" placeholder="Your generated draft will appear here…"></textarea></div>
+  </div>
+</section>
+
+<section id="drafts" class="page">
+  <div class="section"><div><h2>Draft History</h2><p>Review generated drafts and export them.</p></div></div>
+  <div class="panel"><div class="table"><table><thead><tr><th>ID</th><th>Case</th><th>Document type</th><th>Actions</th></tr></thead><tbody id="draftsBody"></tbody></table></div></div>
+</section>
+</main>
+<script src="app.js"></script>
+</body>
+</html>

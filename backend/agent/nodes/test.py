@@ -1,4 +1,4 @@
-from agent.nodes.case_analyzer import analyze_case
+from agent.nodes.case_agent import analyze_case
 
 state = {
     "case_data": {
@@ -27,16 +27,17 @@ No payment was received after the legal notice.
 
 The Plaintiff claims interest at 12% per annum from 15 April 2026
 until realisation.
-
-        """
+        """,
     },
 
     "template": None,
     "custom_prompt": "",
     "metadata": {},
+    "status": "started",
 
     "case_facts": {},
-    "template_blueprint": {},
+    "parameterized_template": "",
+
     "document_plan": {},
     "retrieved_knowledge": [],
     "draft": "",
@@ -44,7 +45,6 @@ until realisation.
 
     "current_section": 0,
     "revision_count": 0,
-    "status": "started",
 }
 
 result = analyze_case(state)

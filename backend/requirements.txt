@@ -6,9 +6,9 @@ sentence-transformers
 pydantic
 python-multipart
 qdrant-client
-ollama
 groq
-dotenv
+python-dotenv
 pypandoc
 langgraph
+google-genai
 openai

@@ -20,10 +20,14 @@ def generate_draft(
     template = get_template_by_id(template_id, db)
     prompt_record = view_prompt(prompt_id, db)
 
-    if not case:
+    # get_case_by_id / get_template_by_id return the literal `True`
+    # (not None) when the record doesn't exist -- `if not case` would
+    # silently pass a boolean through as case_data, since `not True`
+    # is False. Check identity, not truthiness.
+    if case is True:
         raise ValueError("Case not found")
 
-    if not template:
+    if template is True:
         raise ValueError("Template not found")
 
     if not prompt_record:
@@ -45,6 +49,7 @@ def generate_draft(
 
         "case_facts": {},
         "template_blueprint": {},
+        "parameterized_template": "",
 
         "document_plan": {},
         "retrieved_knowledge": [],

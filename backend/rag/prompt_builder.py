@@ -1,3 +1,6 @@
+import json
+
+
 def _payload_text(payload):
     return str(payload.get("text", "")).strip()
 
@@ -45,8 +48,10 @@ def _render_group(items):
     return "\n\n---\n\n".join(blocks)
 
 
-def build_prompt(case_details, template, retrieved_payloads, custom_prompt):
+def build_prompt(case_facts, template_markdown, retrieved_payloads, custom_prompt):
     groups = _group_retrieved_knowledge(retrieved_payloads)
+
+    case_details = json.dumps(case_facts, indent=2, ensure_ascii=False)
 
     prompt = f"""
 You are YEVRAH, an AI legal drafting engine for Indian law firms.
@@ -358,7 +363,7 @@ PRESENT CASE DATA — PRIMARY SOURCE OF CONTENT
 FIRM TEMPLATE — REFERENCE FOR STYLE/STRUCTURE ONLY
 ============================================================
 
-{template.content}
+{template_markdown}
 
 ============================================================
 RETRIEVED DRAFTING-STYLE KNOWLEDGE

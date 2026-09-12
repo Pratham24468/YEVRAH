@@ -1,9 +1,36 @@
+import json
+
 from agent.state import draft_state
 from ai.llm import generate_json
 
 
+CASE_TEXT_FIELDS = ["title", "plaintiff", "defendant", "facts"]
+
+
+def _format_case_data(case_data) -> str:
+    """
+    Accepts either the Case ORM object (production) or a plain dict
+    (unit tests / future case-file ingestion) and returns a readable
+    text block. Without this, an ORM object interpolated directly into
+    an f-string prompt yields something like
+    '<model_db.case_model.Case object at 0x...>' instead of case
+    content.
+    """
+
+    if isinstance(case_data, dict):
+        return json.dumps(case_data, indent=2, ensure_ascii=False)
+
+    lines = []
+    for field in CASE_TEXT_FIELDS:
+        value = getattr(case_data, field, None)
+        if value:
+            lines.append(f"{field.upper()}:\n{value}")
+
+    return "\n\n".join(lines)
+
+
 def analyze_case(state: draft_state) -> draft_state:
-    case_data = state["case_data"]
+    case_data = _format_case_data(state["case_data"])
 
     prompt = f"""
 You are the Case Analysis Agent for YEVRAH.
@@ -82,7 +109,7 @@ CASE DATA:
 {case_data}
 """
 
-    case_facts = generate_json(prompt)
+    case_facts = generate_json(prompt, heavy=True)
 
     return {
         **state,
