@@ -1,139 +1,190 @@
+import json
+
 from agent.state import draft_state
-from ai.llm import generate_general_response
+from ai.llm import generate_json
+
+
+ALLOWED_BLOCK_TYPES = {
+    "court_header",
+    "case_caption",
+    "party_block",
+    "versus",
+    "document_title",
+    "section",
+    "table",
+    "ordered_list",
+    "unordered_list",
+    "verification",
+    "signature",
+    "date_place",
+    "other",
+}
 
 
 def build_template_prompt(markdown_content: str) -> str:
     return f"""
-You are YEVRAH's Template Agent.
+You are YEVRAH's Template Structure Agent.
 
-Convert the supplied legal document Markdown into a reusable
-PARAMETERIZED MARKDOWN TEMPLATE.
+YOUR ONLY JOB:
+Extract the STRUCTURE of the supplied legal document.
 
-The supplied Markdown is the reference document.
+DO NOT extract or reproduce:
+- sentences
+- paragraphs
+- legal wording
+- facts
+- names
+- dates
+- amounts
+- places
+- institutions
+- commodities
+- clauses
+- case citations
+- statutory text
+- explanations
+- section purposes
+- placeholders
 
-Preserve the reference document's:
+The source document is only a layout/organization reference.
+The downstream system will write ALL wording from the present case and RAG.
 
-- structure
-- section order
-- headings
-- paragraph structure
-- numbering
-- tables
-- wording patterns
-- formatting
-- bold
-- italic
-- underline
-- alignment
-- indentation
-- spacing
-- Markdown/Pandoc attributes
-- HTML formatting
-- other Markdown syntax
+Return ONLY valid JSON.
 
-Replace case-specific information with meaningful semantic
-placeholders.
+For each structural block, record only:
+- order: integer starting at 1
+- type: one of the allowed block types below
+- level: heading level (1-6) when relevant, otherwise null
+- paragraph_count: number of paragraphs in the block when relevant, otherwise 0
+- index: sequential index for repeated blocks such as sections/tables/lists, otherwise null
+- rows: table row count when type=table, otherwise 0
+- columns: table column count when type=table, otherwise 0
+- item_count: list item count when type is a list, otherwise 0
 
-Examples:
+Allowed block types:
+{sorted(ALLOWED_BLOCK_TYPES)}
 
-Party names → [CLAIMANT_NAME], [RESPONDENT_NAME]
-Person names → [PERSON_NAME]
-Addresses → [ADDRESS]
-Dates → [DATE]
-Case numbers → [CASE_NUMBER]
-Application numbers → [APPLICATION_NUMBER]
-Amounts → [AMOUNT]
-Principal amounts → [PRINCIPAL_AMOUNT]
-Interest amounts → [INTEREST_AMOUNT]
-Contract numbers → [CONTRACT_NUMBER]
-Invoice numbers → [INVOICE_NUMBER]
-Quantities → [QUANTITY]
-Exhibit references → [EXHIBIT_REFERENCE]
+IMPORTANT:
+- Do not include any source wording in any JSON value.
+- Do not include headings from the source.
+- Do not create placeholders.
+- Do not summarize what a section says.
+- A section is represented only as {{"type": "section", ...}}.
+- A table is represented only by its structural dimensions.
+- If several consecutive paragraphs form one logical section, represent them as
+  one section block and record its paragraph_count.
+- Preserve the exact order of structural blocks.
+- Preserve repeated sections/tables/lists as separate blocks.
 
-Use more specific placeholders when the role of the information
-is clear.
+Required JSON shape:
+{{
+  "blocks": [
+    {{
+      "order": 1,
+      "type": "court_header",
+      "level": null,
+      "paragraph_count": 1,
+      "index": null,
+      "rows": 0,
+      "columns": 0,
+      "item_count": 0
+    }}
+  ]
+}}
 
-For example:
-
-[CLAIMANT_NAME]
-[RESPONDENT_NAME]
-[AFFIANT_NAME]
-[ADVOCATE_NAME]
-[COURT_NAME]
-[APPLICATION_NUMBER]
-[PRINCIPAL_AMOUNT]
-[INTEREST_AMOUNT]
-
-Keep reusable legal wording intact.
-
-Example:
-
-I say that the Respondents failed and neglected to make payment of
-Rs.1,02,68,072/-.
-
-becomes:
-
-I say that the Respondents failed and neglected to make payment of
-[PRINCIPAL_AMOUNT].
-
-Keep the original drafting style and sentence construction.
-
-Preserve tables as tables.
-
-Replace case-specific table values with appropriate placeholders
-while retaining the table's structure, columns, rows, numbering,
-alignment, and formatting.
-
-The resulting template should show YEVRAH where each piece of future
-case information belongs while retaining the drafting pattern of the
-reference document.
-
-The output itself must be a Markdown template.
-
-Return ONLY the completed parameterized Markdown template.
-
-REFERENCE MARKDOWN:
-
+REFERENCE DOCUMENT MARKDOWN:
 {markdown_content}
 """
 
 
-def compile_template(markdown_content: str) -> str:
+def _validate_structure(structure: dict) -> dict:
+    if not isinstance(structure, dict):
+        raise ValueError("Template Agent returned non-object JSON")
+
+    blocks = structure.get("blocks")
+    if not isinstance(blocks, list) or not blocks:
+        raise ValueError("Template Agent returned no structural blocks")
+
+    normalized = []
+    orders = []
+    required_keys = {"order", "type", "level", "paragraph_count", "index", "rows", "columns", "item_count"}
+
+    for block in blocks:
+        if not isinstance(block, dict):
+            raise ValueError("Template Agent returned an invalid block")
+
+        if set(block.keys()) != required_keys:
+            raise ValueError("Template Agent returned extra or missing block fields")
+
+        block_type = block.get("type")
+        if block_type not in ALLOWED_BLOCK_TYPES:
+            raise ValueError(f"Template Agent returned invalid block type: {block_type!r}")
+
+        order = block.get("order")
+        if not isinstance(order, int) or order < 1:
+            raise ValueError("Every template block must have a positive integer order")
+
+        orders.append(order)
+
+        normalized.append({
+            "order": order,
+            "type": block_type,
+            "level": block.get("level") if isinstance(block.get("level"), int) else None,
+            "paragraph_count": block.get("paragraph_count") if isinstance(block.get("paragraph_count"), int) else 0,
+            "index": block.get("index") if isinstance(block.get("index"), int) else None,
+            "rows": block.get("rows") if isinstance(block.get("rows"), int) else 0,
+            "columns": block.get("columns") if isinstance(block.get("columns"), int) else 0,
+            "item_count": block.get("item_count") if isinstance(block.get("item_count"), int) else 0,
+        })
+
+    if sorted(orders) != list(range(1, len(orders) + 1)):
+        raise ValueError("Template block orders must be contiguous starting at 1")
+
+    normalized.sort(key=lambda item: item["order"])
+    return {"blocks": normalized}
+
+
+def compile_template(markdown_content: str, document_type: str | None = None) -> tuple[dict, str]:
     if not markdown_content:
         raise ValueError("Template has no markdown_content")
 
     prompt = build_template_prompt(markdown_content)
+    result = generate_json(prompt, heavy=False)
+    structure = _validate_structure(result)
 
-    result = generate_general_response(prompt)
+    lines = ["TEMPLATE_STRUCTURE", f"DOCUMENT_TYPE: {document_type or '[DOCUMENT_TYPE]'}", "BLOCKS:"]
+    for block in structure["blocks"]:
+        line = f"{block['order']:02d}. {block['type']}"
+        if block["level"] is not None:
+            line += f" level={block['level']}"
+        if block["paragraph_count"]:
+            line += f" paragraphs={block['paragraph_count']}"
+        if block["index"] is not None:
+            line += f" index={block['index']}"
+        if block["type"] == "table":
+            line += f" rows={block['rows']} columns={block['columns']}"
+        if block["type"] in {"ordered_list", "unordered_list"}:
+            line += f" items={block['item_count']}"
+        lines.append(line)
 
-    if not result:
-        raise ValueError(
-            "Template Agent returned empty compiled template"
-        )
-
-    return result.strip()
+    return structure, "\n".join(lines)
 
 
 def analyze_template(state: draft_state) -> draft_state:
     template = state["template"]
-
-    markdown_content = getattr(
-        template,
-        "markdown_content",
-        None,
-    )
+    markdown_content = getattr(template, "markdown_content", None)
 
     if not markdown_content:
-        raise ValueError(
-            "Template has no markdown_content"
-        )
+        raise ValueError("Template has no markdown_content")
 
-    parameterized_template = compile_template(
-        markdown_content
-    )
+    document_type = getattr(template, "document_type", None)
+    structure, structure_text = compile_template(markdown_content, document_type=document_type)
 
     return {
         **state,
-        "parameterized_template": parameterized_template,
-        "status": "template_compiled",
+        "template_structure": structure,
+        # Kept for downstream compatibility. It now contains ONLY structure.
+        "parameterized_template": structure_text,
+        "status_log": [*(state.get("status_log") or []), "template_structure_extracted"],
+        "status": "template_structure_extracted",
     }

@@ -1,0 +1,167 @@
+{
+  "sections": [
+    {
+      "id": "section_1",
+      "name": "Court Header and Case Caption",
+      "block_orders": [
+        1,
+        2
+      ],
+      "case_fact_categories": [
+        "parties"
+      ],
+      "evidence_query": "Indian civil suit court header format jurisdiction"
+    },
+    {
+      "id": "section_2",
+      "name": "Parties Description",
+      "block_orders": [
+        3,
+        4,
+        5
+      ],
+      "case_fact_categories": [
+        "parties",
+        "relationships"
+      ],
+      "evidence_query": "Indian plaint party description supplier buyer format"
+    },
+    {
+      "id": "section_3",
+      "name": "Document Title and Jurisdiction",
+      "block_orders": [
+        6
+      ],
+      "case_fact_categories": [
+        "legal_issues"
+      ],
+      "evidence_query": "Indian suit for recovery goods sold delivered title"
+    },
+    {
+      "id": "section_4",
+      "name": "Preliminary Facts and Cause of Action",
+      "block_orders": [
+        7,
+        8,
+        9
+      ],
+      "case_fact_categories": [
+        "agreements",
+        "chronology",
+        "financials"
+      ],
+      "evidence_query": "Indian goods sold delivered cause of action drafting"
+    },
+    {
+      "id": "section_5",
+      "name": "Transaction Details and Payment History",
+      "block_orders": [
+        10,
+        11,
+        12
+      ],
+      "case_fact_categories": [
+        "financials",
+        "agreements",
+        "chronology"
+      ],
+      "evidence_query": "Indian recovery suit supply goods payment table drafting"
+    },
+    {
+      "id": "section_6",
+      "name": "Demand and Default Narrative",
+      "block_orders": [
+        13,
+        14,
+        15,
+        16
+      ],
+      "case_fact_categories": [
+        "communications",
+        "defaults",
+        "demands"
+      ],
+      "evidence_query": "Indian legal notice demand acknowledgment default drafting"
+    },
+    {
+      "id": "section_7",
+      "name": "Invoice and Supply Schedule",
+      "block_orders": [
+        17
+      ],
+      "case_fact_categories": [
+        "financials",
+        "agreements"
+      ],
+      "evidence_query": "Indian suit recovery invoice schedule goods supplied table"
+    },
+    {
+      "id": "section_8",
+      "name": "Interest Calculation and Claim",
+      "block_orders": [
+        18,
+        19,
+        20
+      ],
+      "case_fact_categories": [
+        "financials",
+        "demands"
+      ],
+      "evidence_query": "Indian interest claim 12 percent per annum recovery suit"
+    },
+    {
+      "id": "section_9",
+      "name": "Legal Grounds and Limitation",
+      "block_orders": [
+        21,
+        22,
+        23,
+        24
+      ],
+      "case_fact_categories": [
+        "legal_issues",
+        "chronology"
+      ],
+      "evidence_query": "Indian limitation act goods sold delivered three years"
+    },
+    {
+      "id": "section_10",
+      "name": "Jurisdiction and Valuation",
+      "block_orders": [
+        25,
+        26,
+        27
+      ],
+      "case_fact_categories": [
+        "legal_issues",
+        "financials"
+      ],
+      "evidence_query": "Indian civil suit jurisdiction pecuniary valuation recovery"
+    },
+    {
+      "id": "section_11",
+      "name": "Prayer and Relief",
+      "block_orders": [
+        28,
+        29
+      ],
+      "case_fact_categories": [
+        "relief",
+        "demands"
+      ],
+      "evidence_query": "Indian plaint prayer recovery principal interest costs"
+    },
+    {
+      "id": "section_12",
+      "name": "Signature and Verification",
+      "block_orders": [
+        30,
+        31
+      ],
+      "case_fact_categories": [
+        "parties"
+      ],
+      "evidence_query": "Indian plaint verification affidavit format Order 6 Rule 15"
+    }
+  ]
+}

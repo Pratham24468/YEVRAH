@@ -1,0 +1,29 @@
+{
+  "structural_warnings": [],
+  "verification_warnings": [
+    {
+      "claim": "a proprietorship/partnership firm",
+      "issue": "Case facts do not specify Defendant's business structure; identifying_information only states 'Recipient of industrial electrical components'."
+    },
+    {
+      "claim": "The Defendant accepted the goods supplied by the Plaintiff without any objection, defect, or dispute regarding the quality, quantity, or specifications of the said industrial electrical components.",
+      "issue": "Case facts explicitly list 'Whether goods were accepted without dispute' as missing information; this factual assertion is unsupported."
+    },
+    {
+      "claim": "The Defendant is financially capable of making the payment but is deliberately avoiding the same.",
+      "issue": "No information in case facts about Defendant's financial capacity or intent; this is an invented factual claim."
+    },
+    {
+      "claim": "made repeated oral and written requests to the Defendant for payment of the outstanding dues.",
+      "issue": "Case facts document only two written communications (demand notice 20 May 2026 and legal notice 5 June 2026); no oral requests are recorded."
+    },
+    {
+      "claim": "the contract for supply of goods was entered into at [PLACE], the goods were delivered at the Defendant's premises situated within the jurisdiction of this Court, the partial payment was made at [PLACE]",
+      "issue": "Case facts contain no information about where the contract was entered, where goods were delivered, or where partial payment was made; these jurisdictional facts are invented."
+    },
+    {
+      "claim": "The Defendant received the said legal notice but has failed to make any payment till date.",
+      "issue": "Case facts record only that the legal notice was sent on 5 June 2026; receipt by Defendant is not confirmed (unlike the demand notice, which has an acknowledgment recorded)."
+    }
+  ]
+}

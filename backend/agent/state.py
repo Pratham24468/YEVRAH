@@ -20,6 +20,8 @@ class draft_state(TypedDict):
     retrieved_knowledge: list[dict]
     draft: str
     review: dict
+    structural_warnings: list[str]
+    verification_warnings: list[dict]
 
     # Control
     current_section: int

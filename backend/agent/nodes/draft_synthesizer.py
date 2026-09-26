@@ -1,3 +1,6 @@
+import json
+import re
+
 from agent.state import draft_state
 from ai.llm import generate_response
 from rag.retriever import retrieve_chunks
@@ -7,19 +10,19 @@ from rag.prompt_builder import build_prompt
 EVIDENCE_LIMIT_PER_SECTION = 4
 
 
+def _resolve_case_id(state: draft_state):
+    metadata = state.get("metadata") or {}
+    case_id = metadata.get("case_id")
+    if case_id is not None:
+        return case_id
+    return state.get("case_id")
+
+
 def gather_section_evidence(state: draft_state) -> list[dict]:
-    """
-    Runs one RAG query per section identified by the Section Classifier,
-    scoped to the current case (case-specific documents + global
-    knowledge), and tags each retrieved chunk with the section it was
-    retrieved for.
-    """
-
-    case_id = state.get("metadata", {}).get("case_id")
+    case_id = _resolve_case_id(state)
     sections = state.get("document_plan", {}).get("sections", [])
-
     evidence = []
-    seen_ids = set()
+    seen = set()
 
     for section in sections:
         query = section.get("evidence_query")
@@ -33,42 +36,85 @@ def gather_section_evidence(state: draft_state) -> list[dict]:
         )
 
         for payload in payloads:
-            # de-dupe: the same global-knowledge chunk can legitimately
-            # satisfy more than one section's query
-            dedupe_key = (payload.get("source"), payload.get("text"))
-            if dedupe_key in seen_ids:
+            key = (payload.get("source"), payload.get("text"))
+            if key in seen:
                 continue
-            seen_ids.add(dedupe_key)
-
-            tagged = dict(payload)
-            tagged["section"] = section.get("name")
-            evidence.append(tagged)
+            seen.add(key)
+            item = dict(payload)
+            item["section"] = section.get("name")
+            evidence.append(item)
 
     return evidence
 
 
-def synthesize_draft(state: draft_state) -> draft_state:
-    parameterized_template = state.get("parameterized_template")
-    case_facts = state.get("case_facts")
+def _structure_contract(template_structure: dict) -> str:
+    return json.dumps(template_structure, indent=2, ensure_ascii=False)
+
+
+def _build_synthesis_prompt(
+    state: draft_state,
+    retrieved_knowledge: list[dict],
+) -> str:
+    template_structure = state.get("template_structure") or {}
+    case_facts = state.get("case_facts") or {}
     custom_prompt = state.get("custom_prompt", "")
 
-    if not parameterized_template:
-        raise ValueError(
-            "Draft Synthesizer requires a parameterized_template"
-        )
-
-    if not case_facts:
-        raise ValueError("Draft Synthesizer requires case_facts")
-
-    retrieved_knowledge = gather_section_evidence(state)
-
-    prompt = build_prompt(
+    # Reuse the project's structure-aware prompt builder. The builder expects
+    # a template_markdown argument, so pass the structure-only text.
+    structure_text = _structure_contract(template_structure)
+    base = build_prompt(
         case_facts=case_facts,
-        template_markdown=parameterized_template,
+        template_markdown=structure_text,
         retrieved_payloads=retrieved_knowledge,
         custom_prompt=custom_prompt,
     )
 
+    document_type = getattr(state.get("template"), "document_type", None)
+    structure = structure_text
+
+    return f"""
+YEVRAH DRAFT SYNTHESIZER
+
+Create the final legal document for the PRESENT CASE.
+
+DOCUMENT TYPE:
+{document_type or 'Use the template record document type.'}
+
+STRUCTURE-ONLY CONTRACT:
+The structure below is the ONLY template information. It contains no source
+paragraphs and no source wording.
+
+{structure}
+
+MANDATORY EXECUTION RULES:
+1. Follow the structural block order exactly.
+2. Generate ALL wording fresh for the present case.
+3. Use CASE FACTS as the factual source of truth.
+4. Use retrieved RAG only for drafting language, legal principles, statutes,
+   precedents, and relevant case law.
+5. Never treat GLOBAL RAG material as present-case facts.
+6. Do not invent facts, parties, dates, amounts, allegations, contracts,
+   evidence, procedural history, or legal propositions.
+7. Include the structural elements represented by the template blocks,
+   including lists/tables/verification/signature blocks where applicable.
+8. Do not create placeholders from the old template system. When a required
+   fact is genuinely unavailable, write [INFORMATION REQUIRED].
+9. Return ONLY the final Markdown legal document.
+
+{base}
+"""
+
+
+def synthesize_draft(state: draft_state) -> draft_state:
+    if not state.get("template_structure"):
+        raise ValueError("Draft Synthesizer requires template_structure")
+    if not state.get("case_facts"):
+        raise ValueError("Draft Synthesizer requires case_facts")
+    if not state.get("document_plan", {}).get("sections"):
+        raise ValueError("Draft Synthesizer requires document_plan sections")
+
+    retrieved_knowledge = gather_section_evidence(state)
+    prompt = _build_synthesis_prompt(state, retrieved_knowledge)
     draft_text = generate_response(prompt)
 
     if not draft_text:
@@ -77,6 +123,6 @@ def synthesize_draft(state: draft_state) -> draft_state:
     return {
         **state,
         "retrieved_knowledge": retrieved_knowledge,
-        "draft": draft_text,
+        "draft": draft_text.strip(),
         "status": "draft_synthesized",
     }

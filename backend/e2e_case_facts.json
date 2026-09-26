@@ -3,62 +3,53 @@
     {
       "name": "Aarav Industrial Supplies Pvt. Ltd.",
       "role": "Plaintiff",
-      "description": "Supplier of industrial electrical components"
+      "identifying_information": "Supplier of industrial electrical components"
     },
     {
       "name": "Zenith Engineering Works",
       "role": "Defendant",
-      "description": "Recipient/buyer of industrial electrical components"
+      "identifying_information": "Recipient of industrial electrical components"
     }
   ],
   "relationships": [
     {
       "from": "Aarav Industrial Supplies Pvt. Ltd.",
       "to": "Zenith Engineering Works",
-      "type": "Supplier-Buyer",
-      "description": "Supply of industrial electrical components"
+      "description": "Supplier-buyer relationship for industrial electrical components"
     }
   ],
   "chronology": [
     {
-      "date": "12 February 2026",
-      "event": "Commencement of supply of industrial electrical components"
+      "date": "2026-02-12",
+      "event": "Supply of industrial electrical components commenced"
     },
     {
-      "date": "28 March 2026",
-      "event": "Completion of supply of industrial electrical components"
+      "date": "2026-03-28",
+      "event": "Supply of industrial electrical components completed"
     },
     {
-      "date": "15 April 2026",
-      "event": "Partial payment of ₹2,00,000 made by Defendant"
+      "date": "2026-04-15",
+      "event": "Defendant made partial payment of ₹2,00,000"
     },
     {
-      "date": "20 May 2026",
-      "event": "Written demand sent by Plaintiff for outstanding payment"
+      "date": "2026-05-20",
+      "event": "Plaintiff sent written demand for payment"
     },
     {
-      "date": "20 May 2026",
-      "event": "Defendant acknowledged receipt of written demand"
+      "date": "2026-06-05",
+      "event": "Plaintiff sent legal notice demanding payment"
     },
     {
-      "date": "5 June 2026",
-      "event": "Legal notice sent by Plaintiff demanding payment"
-    },
-    {
-      "date": "After 5 June 2026",
-      "event": "No payment received by Plaintiff after legal notice"
+      "date": "2026-06-05",
+      "event": "No payment received after legal notice (ongoing)"
     }
   ],
   "agreements": [
     {
-      "type": "Implied contract for sale of goods",
-      "parties": [
-        "Aarav Industrial Supplies Pvt. Ltd.",
-        "Zenith Engineering Works"
-      ],
-      "subject": "Supply of industrial electrical components",
-      "terms": "Goods supplied between 12 February 2026 and 28 March 2026; total value ₹8,74,500",
-      "payment_terms": "Not explicitly stated in supplied facts; partial payment made on 15 April 2026"
+      "description": "Supply of industrial electrical components by Plaintiff to Defendant",
+      "period": "12 February 2026 to 28 March 2026",
+      "terms": "Not specified in case data",
+      "payment_terms": "Not specified in case data"
     }
   ],
   "financials": [
@@ -66,72 +57,78 @@
       "description": "Total value of goods supplied",
       "amount": 874500,
       "currency": "INR",
-      "date": "28 March 2026"
+      "date": "2026-03-28"
     },
     {
-      "description": "Partial payment received",
+      "description": "Partial payment received from Defendant",
       "amount": 200000,
       "currency": "INR",
-      "date": "15 April 2026"
+      "date": "2026-04-15"
     },
     {
       "description": "Outstanding principal amount",
       "amount": 674500,
       "currency": "INR",
-      "date": "15 April 2026"
+      "date": "2026-04-15"
     },
     {
-      "description": "Interest claimed",
+      "description": "Interest claimed by Plaintiff",
       "rate": "12% per annum",
-      "from_date": "15 April 2026",
-      "until": "realisation",
-      "basis": "Plaintiff's claim"
+      "from_date": "2026-04-15",
+      "to_date": "Until realisation"
     }
   ],
   "defaults": [
     {
       "description": "Non-payment of outstanding principal amount of ₹6,74,500",
-      "date_from": "15 April 2026",
-      "details": "Defendant failed to pay balance after partial payment; did not pay after written demand dated 20 May 2026; did not pay after legal notice dated 5 June 2026"
+      "date_from": "2026-04-15",
+      "details": "Defendant failed to pay remaining balance after partial payment"
+    },
+    {
+      "description": "Non-payment after written demand dated 20 May 2026",
+      "date_from": "2026-05-20",
+      "details": "Defendant acknowledged receipt but did not make payment"
+    },
+    {
+      "description": "Non-payment after legal notice dated 5 June 2026",
+      "date_from": "2026-06-05",
+      "details": "No payment received after legal notice"
     }
   ],
   "communications": [
     {
-      "date": "20 May 2026",
       "type": "Written demand",
       "from": "Aarav Industrial Supplies Pvt. Ltd.",
       "to": "Zenith Engineering Works",
-      "subject": "Demand for outstanding payment",
-      "response": "Defendant acknowledged receipt but did not make payment"
+      "date": "2026-05-20",
+      "description": "Plaintiff sent written demand for payment"
     },
     {
-      "date": "5 June 2026",
+      "type": "Acknowledgment",
+      "from": "Zenith Engineering Works",
+      "to": "Aarav Industrial Supplies Pvt. Ltd.",
+      "date": "2026-05-20",
+      "description": "Defendant acknowledged receipt of demand but did not make payment"
+    },
+    {
       "type": "Legal notice",
       "from": "Aarav Industrial Supplies Pvt. Ltd.",
       "to": "Zenith Engineering Works",
-      "subject": "Demand for payment of outstanding amount",
-      "response": "No payment received"
+      "date": "2026-06-05",
+      "description": "Plaintiff sent legal notice demanding payment"
     }
   ],
   "legal_issues": [
     "Recovery of outstanding principal amount of ₹6,74,500 for goods supplied",
     "Claim for interest at 12% per annum from 15 April 2026 until realisation",
-    "Whether written demand and legal notice satisfy pre-litigation requirements"
+    "Defendant's liability after acknowledgment of demand and legal notice"
   ],
   "demands": [
     {
-      "by": "Aarav Industrial Supplies Pvt. Ltd.",
-      "date": "20 May 2026",
-      "description": "Written demand for payment of outstanding amount"
-    },
-    {
-      "by": "Aarav Industrial Supplies Pvt. Ltd.",
-      "date": "5 June 2026",
-      "description": "Legal notice demanding payment of outstanding amount"
-    },
-    {
-      "by": "Aarav Industrial Supplies Pvt. Ltd.",
-      "description": "Payment of outstanding principal ₹6,74,500 plus interest at 12% per annum from 15 April 2026 until realisation"
+      "from": "Aarav Industrial Supplies Pvt. Ltd.",
+      "to": "Zenith Engineering Works",
+      "description": "Payment of outstanding principal amount of ₹6,74,500 plus interest at 12% per annum from 15 April 2026 until realisation",
+      "date": "2026-06-05"
     }
   ],
   "relief": [
@@ -140,18 +137,18 @@
     "Costs of proceedings"
   ],
   "missing_information": [
-    "Written contract/agreement details (if any) including payment terms, credit period, interest clause",
-    "Invoice numbers, dates, and detailed breakdown of goods supplied (items, quantities, rates)",
-    "GST invoice details and tax compliance",
-    "Exact content of written demand dated 20 May 2026",
-    "Exact content of legal notice dated 5 June 2026",
-    "Evidence of Defendant's acknowledgement of written demand",
-    "Jurisdiction and appropriate court for filing",
-    "Limitation period analysis (date of cause of action)",
-    "Authorization for legal proceedings (board resolution, power of attorney)",
-    "Defendant's legal status (proprietorship/partnership/LLP/company) and authorized signatory",
-    "Any prior correspondence or purchase orders",
-    "Whether MSME status applies and MSME declaration",
-    "Any set-off, counterclaim, or dispute raised by Defendant"
+    "Invoice numbers and individual invoice dates for supplies",
+    "Specific contract or purchase order references",
+    "Agreed payment terms (credit period, due dates)",
+    "Detailed description of industrial electrical components supplied",
+    "Content of written demand dated 20 May 2026",
+    "Content of legal notice dated 5 June 2026",
+    "Mode of acknowledgment by Defendant (written/oral, date)",
+    "Jurisdiction/court for filing suit",
+    "Limitation period analysis",
+    "Whether any further correspondence occurred after 5 June 2026",
+    "Defendant's response (if any) to legal notice",
+    "Registration details of both entities (CIN, GSTIN, address)",
+    "Whether goods were accepted without dispute"
   ]
 }

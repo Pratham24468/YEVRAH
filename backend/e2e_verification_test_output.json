@@ -1,0 +1,173 @@
+{
+  "draft_file": "C:\\Users\\Admin\\Downloads\\YEVRAH\\e2e_draft.md",
+  "case_facts_file": "C:\\Users\\Admin\\Downloads\\YEVRAH\\e2e_case_facts.json",
+  "draft_length": 10707,
+  "verified": false,
+  "warnings": [
+    {
+      "issue_id": "F-001",
+      "block_id": "paragraph_01",
+      "current_text": "That I am the Director of the Plaintiff company, Aarav Industrial Supplies Pvt. Ltd., and am duly authorised by the Board of Directors of the said company vide Board Resolution dated [DATE] to institute, pursue, and represent the company in the present suit.",
+      "claim": "That I am the Director of the Plaintiff company, Aarav Industrial Supplies Pvt. Ltd., and am duly authorised by the Board of Directors of the said company vide Board Resolution dated [DATE] to institute, pursue, and represent the company in the present suit.",
+      "issue": "The case facts do not mention any board resolution authorizing the director to institute the suit. This factual assertion is unsupported.",
+      "severity": "medium",
+      "missing_information": {
+        "type": "board_resolution",
+        "description": "Board resolution authorizing the director to institute the suit, including its date."
+      },
+      "char_start": 1121,
+      "char_end": 1379,
+      "text_occurrences": 1
+    },
+    {
+      "issue_id": "F-002",
+      "block_id": "paragraph_03",
+      "current_text": "That during the period from **12 February 2026 to 28 March 2026**, the Plaintiff company supplied industrial electrical components to the Defendant as per the Defendant's requirements and purchase orders.",
+      "claim": "That during the period from **12 February 2026 to 28 March 2026**, the Plaintiff company supplied industrial electrical components to the Defendant as per the Defendant's requirements and purchase orders.",
+      "issue": "The case facts do not mention purchase orders. The agreement terms are noted as 'Not specified in case data'. The reference to purchase orders is an unsupported factual claim.",
+      "severity": "high",
+      "missing_information": {
+        "type": "purchase_orders",
+        "description": "Details of purchase orders issued by the Defendant for the supplies."
+      },
+      "char_start": 1875,
+      "char_end": 2079,
+      "text_occurrences": 1
+    },
+    {
+      "issue_id": "F-003",
+      "block_id": "paragraph_04",
+      "current_text": "That the Defendant accepted the goods supplied by the Plaintiff without any objection, defect, or dispute regarding the quality, quantity, or specifications of the said industrial electrical components. The goods were duly delivered at the Defendant's premises and were accepted by the Defendant's authorised personnel.",
+      "claim": "That the Defendant accepted the goods supplied by the Plaintiff without any objection, defect, or dispute regarding the quality, quantity, or specifications of the said industrial electrical components. The goods were duly delivered at the Defendant's premises and were accepted by the Defendant's authorised personnel.",
+      "issue": "The case facts do not state that the goods were accepted without objection. The missing information list explicitly includes 'Whether goods were accepted without dispute'. This assertion is unsupported.",
+      "severity": "high",
+      "missing_information": {
+        "type": "goods_acceptance",
+        "description": "Confirmation that the Defendant accepted the goods without objection, defect, or dispute, and details of delivery and acceptance."
+      },
+      "char_start": 2862,
+      "char_end": 3181,
+      "text_occurrences": 1
+    },
+    {
+      "issue_id": "F-004",
+      "block_id": "paragraph_06",
+      "current_text": "That despite the receipt of goods and acknowledgment of the debt, the Defendant failed to discharge the balance outstanding amount. The Plaintiff company, through its authorised representative, made repeated oral and written requests to the Defendant for payment of the outstanding dues.",
+      "claim": "That despite the receipt of goods and acknowledgment of the debt, the Defendant failed to discharge the balance outstanding amount. The Plaintiff company, through its authorised representative, made repeated oral and written requests to the Defendant for payment of the outstanding dues.",
+      "issue": "The case facts only mention a written demand (20 May 2026) and a legal notice (5 June 2026). There is no mention of repeated oral requests. This claim is unsupported.",
+      "severity": "medium",
+      "missing_information": {
+        "type": "oral_requests",
+        "description": "Details of any oral requests made by the Plaintiff for payment prior to written demand."
+      },
+      "char_start": 3467,
+      "char_end": 3754,
+      "text_occurrences": 1
+    },
+    {
+      "issue_id": "F-005",
+      "block_id": "paragraph_12",
+      "current_text": "That the Plaintiff has not received any payment, part-payment, or proposal for settlement from the Defendant after the legal notice dated 5 June 2026. The Defendant's silence and inaction constitute an implicit admission of the liability.",
+      "claim": "That the Plaintiff has not received any payment, part-payment, or proposal for settlement from the Defendant after the legal notice dated 5 June 2026. The Defendant's silence and inaction constitute an implicit admission of the liability.",
+      "issue": "The case facts state 'No payment received after legal notice (ongoing)' but do not mention anything about a proposal for settlement. The claim regarding no proposal for settlement is unsupported.",
+      "severity": "medium",
+      "missing_information": {
+        "type": "settlement_proposal",
+        "description": "Whether any proposal for settlement was received from the Defendant after the legal notice."
+      },
+      "char_start": 6381,
+      "char_end": 6619,
+      "text_occurrences": 1
+    },
+    {
+      "issue_id": "F-006",
+      "block_id": "paragraph_13",
+      "current_text": "That the present suit is filed within the period of limitation prescribed under the Limitation Act, 1963, as the cause of action arose on 15 April 2026 and the suit is being filed well within three years therefrom.",
+      "claim": "That the present suit is filed within the period of limitation prescribed under the Limitation Act, 1963, as the cause of action arose on 15 April 2026 and the suit is being filed well within three years therefrom.",
+      "issue": "The case facts do not provide the date of filing of the suit. Without the filing date, the assertion that the suit is filed within three years cannot be verified.",
+      "severity": "high",
+      "missing_information": {
+        "type": "filing_date",
+        "description": "Date of filing of the suit to verify limitation period compliance."
+      },
+      "char_start": 6629,
+      "char_end": 6843,
+      "text_occurrences": 1
+    },
+    {
+      "issue_id": "F-007",
+      "block_id": "paragraph_14",
+      "current_text": "That this Hon'ble Court has **territorial jurisdiction** to entertain the present suit because the contract for supply of goods was entered into at [PLACE], the goods were delivered at the Defendant's premises situated within the jurisdiction of this Court, the partial payment was made at [PLACE], and the cause of action, wholly or in part, arose within the territorial jurisdiction of this Court.",
+      "claim": "That this Hon'ble Court has **territorial jurisdiction** to entertain the present suit because the contract for supply of goods was entered into at [PLACE], the goods were delivered at the Defendant's premises situated within the jurisdiction of this Court, the partial payment was made at [PLACE], and the cause of action, wholly or in part, arose within the territorial jurisdiction of this Court.",
+      "issue": "The case facts do not specify where the contract was entered into, where the goods were delivered, or where the partial payment was made. These jurisdictional facts are unsupported and the missing information list includes 'Jurisdiction/court for filing suit'.",
+      "severity": "high",
+      "missing_information": {
+        "type": "jurisdiction_facts",
+        "description": "Place where contract was entered into, place of delivery of goods, place where partial payment was made, to establish territorial jurisdiction."
+      },
+      "char_start": 6853,
+      "char_end": 7252,
+      "text_occurrences": 1
+    },
+    {
+      "issue_id": "F-008",
+      "block_id": "paragraph_16",
+      "current_text": "That the suit is filed under **Order XXXVII of the Code of Civil Procedure, 1908** (Summary Procedure) as the claim is for a liquidated demand arising upon a written contract / bill of exchange / promissory note / acknowledgement of debt, and no relief has been claimed which does not fall within the ambit of Order XXXVII.",
+      "claim": "That the suit is filed under **Order XXXVII of the Code of Civil Procedure, 1908** (Summary Procedure) as the claim is for a liquidated demand arising upon a written contract / bill of exchange / promissory note / acknowledgement of debt, and no relief has been claimed which does not fall within the ambit of Order XXXVII.",
+      "issue": "The case facts do not indicate the basis of the claim (written contract, bill of exchange, promissory note, or acknowledgement of debt). The agreement terms are 'Not specified in case data'. This assertion is unsupported.",
+      "severity": "high",
+      "missing_information": {
+        "type": "claim_basis",
+        "description": "Basis of the claim (written contract, bill of exchange, promissory note, acknowledgement of debt) to support filing under Order XXXVII."
+      },
+      "char_start": 7513,
+      "char_end": 7836,
+      "text_occurrences": 1
+    },
+    {
+      "issue_id": "F-009",
+      "block_id": "paragraph_17",
+      "current_text": "That the Plaintiff has no other remedy available except to approach this Hon'ble Court for recovery of the outstanding amount. The Defendant is financially capable of making the payment but is deliberately avoiding the same.",
+      "claim": "That the Plaintiff has no other remedy available except to approach this Hon'ble Court for recovery of the outstanding amount. The Defendant is financially capable of making the payment but is deliberately avoiding the same.",
+      "issue": "The case facts contain no information about the Defendant's financial capability or deliberate avoidance. This is an unsupported factual assertion.",
+      "severity": "medium",
+      "missing_information": {
+        "type": "defendant_financial_capability",
+        "description": "Evidence or assertion of the Defendant's financial capability and deliberate avoidance of payment."
+      },
+      "char_start": 7846,
+      "char_end": 8070,
+      "text_occurrences": 1
+    },
+    {
+      "issue_id": "F-010",
+      "block_id": "paragraph_18",
+      "current_text": "That the Plaintiff has not filed any other suit, application, or proceeding in any other court of law for the same cause of action. The present suit is not barred by the doctrine of res judicata, estoppel, or any other law for the time being in force.",
+      "claim": "That the Plaintiff has not filed any other suit, application, or proceeding in any other court of law for the same cause of action. The present suit is not barred by the doctrine of res judicata, estoppel, or any other law for the time being in force.",
+      "issue": "The case facts do not mention whether any other proceedings have been filed. This factual claim is unsupported.",
+      "severity": "medium",
+      "missing_information": {
+        "type": "other_proceedings",
+        "description": "Confirmation that no other suit, application, or proceeding has been filed for the same cause of action."
+      },
+      "char_start": 8080,
+      "char_end": 8331,
+      "text_occurrences": 1
+    },
+    {
+      "issue_id": "F-011",
+      "block_id": "paragraph_19",
+      "current_text": "That all the documents relied upon by the Plaintiff, including invoices, delivery challans, payment receipts, demand notices, legal notice, and acknowledgment thereof, are in the possession and power of the Plaintiff and shall be produced at the time of trial. True copies of the said documents are filed along with the plaint.",
+      "claim": "That all the documents relied upon by the Plaintiff, including invoices, delivery challans, payment receipts, demand notices, legal notice, and acknowledgment thereof, are in the possession and power of the Plaintiff and shall be produced at the time of trial. True copies of the said documents are filed along with the plaint.",
+      "issue": "The case facts do not mention delivery challans, payment receipts, or that true copies have been filed with the plaint. The missing information list includes invoice numbers and content of notices, but not these documents. The assertion is unsupported.",
+      "severity": "medium",
+      "missing_information": {
+        "type": "document_possession",
+        "description": "Confirmation of possession of delivery challans, payment receipts, and that true copies of all documents have been filed with the plaint."
+      },
+      "char_start": 8341,
+      "char_end": 8668,
+      "text_occurrences": 1
+    }
+  ]
+}

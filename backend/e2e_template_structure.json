@@ -1,0 +1,314 @@
+{
+  "blocks": [
+    {
+      "order": 1,
+      "type": "court_header",
+      "level": null,
+      "paragraph_count": 1,
+      "index": null,
+      "rows": 0,
+      "columns": 0,
+      "item_count": 0
+    },
+    {
+      "order": 2,
+      "type": "case_caption",
+      "level": null,
+      "paragraph_count": 1,
+      "index": null,
+      "rows": 0,
+      "columns": 0,
+      "item_count": 0
+    },
+    {
+      "order": 3,
+      "type": "party_block",
+      "level": null,
+      "paragraph_count": 1,
+      "index": 1,
+      "rows": 0,
+      "columns": 0,
+      "item_count": 0
+    },
+    {
+      "order": 4,
+      "type": "versus",
+      "level": null,
+      "paragraph_count": 1,
+      "index": null,
+      "rows": 0,
+      "columns": 0,
+      "item_count": 0
+    },
+    {
+      "order": 5,
+      "type": "party_block",
+      "level": null,
+      "paragraph_count": 1,
+      "index": 2,
+      "rows": 0,
+      "columns": 0,
+      "item_count": 0
+    },
+    {
+      "order": 6,
+      "type": "document_title",
+      "level": null,
+      "paragraph_count": 1,
+      "index": null,
+      "rows": 0,
+      "columns": 0,
+      "item_count": 0
+    },
+    {
+      "order": 7,
+      "type": "section",
+      "level": null,
+      "paragraph_count": 1,
+      "index": null,
+      "rows": 0,
+      "columns": 0,
+      "item_count": 0
+    },
+    {
+      "order": 8,
+      "type": "section",
+      "level": null,
+      "paragraph_count": 1,
+      "index": null,
+      "rows": 0,
+      "columns": 0,
+      "item_count": 0
+    },
+    {
+      "order": 9,
+      "type": "section",
+      "level": null,
+      "paragraph_count": 1,
+      "index": null,
+      "rows": 0,
+      "columns": 0,
+      "item_count": 0
+    },
+    {
+      "order": 10,
+      "type": "section",
+      "level": null,
+      "paragraph_count": 1,
+      "index": null,
+      "rows": 0,
+      "columns": 0,
+      "item_count": 0
+    },
+    {
+      "order": 11,
+      "type": "section",
+      "level": null,
+      "paragraph_count": 1,
+      "index": null,
+      "rows": 0,
+      "columns": 0,
+      "item_count": 0
+    },
+    {
+      "order": 12,
+      "type": "table",
+      "level": null,
+      "paragraph_count": 0,
+      "index": 1,
+      "rows": 3,
+      "columns": 4,
+      "item_count": 0
+    },
+    {
+      "order": 13,
+      "type": "section",
+      "level": null,
+      "paragraph_count": 1,
+      "index": null,
+      "rows": 0,
+      "columns": 0,
+      "item_count": 0
+    },
+    {
+      "order": 14,
+      "type": "section",
+      "level": null,
+      "paragraph_count": 1,
+      "index": null,
+      "rows": 0,
+      "columns": 0,
+      "item_count": 0
+    },
+    {
+      "order": 15,
+      "type": "section",
+      "level": null,
+      "paragraph_count": 1,
+      "index": null,
+      "rows": 0,
+      "columns": 0,
+      "item_count": 0
+    },
+    {
+      "order": 16,
+      "type": "section",
+      "level": null,
+      "paragraph_count": 1,
+      "index": null,
+      "rows": 0,
+      "columns": 0,
+      "item_count": 0
+    },
+    {
+      "order": 17,
+      "type": "table",
+      "level": null,
+      "paragraph_count": 0,
+      "index": 2,
+      "rows": 6,
+      "columns": 5,
+      "item_count": 0
+    },
+    {
+      "order": 18,
+      "type": "section",
+      "level": null,
+      "paragraph_count": 1,
+      "index": null,
+      "rows": 0,
+      "columns": 0,
+      "item_count": 0
+    },
+    {
+      "order": 19,
+      "type": "section",
+      "level": null,
+      "paragraph_count": 1,
+      "index": null,
+      "rows": 0,
+      "columns": 0,
+      "item_count": 0
+    },
+    {
+      "order": 20,
+      "type": "section",
+      "level": null,
+      "paragraph_count": 1,
+      "index": null,
+      "rows": 0,
+      "columns": 0,
+      "item_count": 0
+    },
+    {
+      "order": 21,
+      "type": "section",
+      "level": null,
+      "paragraph_count": 1,
+      "index": null,
+      "rows": 0,
+      "columns": 0,
+      "item_count": 0
+    },
+    {
+      "order": 22,
+      "type": "section",
+      "level": null,
+      "paragraph_count": 1,
+      "index": null,
+      "rows": 0,
+      "columns": 0,
+      "item_count": 0
+    },
+    {
+      "order": 23,
+      "type": "section",
+      "level": null,
+      "paragraph_count": 1,
+      "index": null,
+      "rows": 0,
+      "columns": 0,
+      "item_count": 0
+    },
+    {
+      "order": 24,
+      "type": "section",
+      "level": null,
+      "paragraph_count": 1,
+      "index": null,
+      "rows": 0,
+      "columns": 0,
+      "item_count": 0
+    },
+    {
+      "order": 25,
+      "type": "section",
+      "level": null,
+      "paragraph_count": 1,
+      "index": null,
+      "rows": 0,
+      "columns": 0,
+      "item_count": 0
+    },
+    {
+      "order": 26,
+      "type": "section",
+      "level": null,
+      "paragraph_count": 1,
+      "index": null,
+      "rows": 0,
+      "columns": 0,
+      "item_count": 0
+    },
+    {
+      "order": 27,
+      "type": "section",
+      "level": null,
+      "paragraph_count": 1,
+      "index": null,
+      "rows": 0,
+      "columns": 0,
+      "item_count": 0
+    },
+    {
+      "order": 28,
+      "type": "section",
+      "level": null,
+      "paragraph_count": 1,
+      "index": null,
+      "rows": 0,
+      "columns": 0,
+      "item_count": 0
+    },
+    {
+      "order": 29,
+      "type": "section",
+      "level": null,
+      "paragraph_count": 1,
+      "index": null,
+      "rows": 0,
+      "columns": 0,
+      "item_count": 0
+    },
+    {
+      "order": 30,
+      "type": "signature",
+      "level": null,
+      "paragraph_count": 2,
+      "index": null,
+      "rows": 0,
+      "columns": 0,
+      "item_count": 0
+    },
+    {
+      "order": 31,
+      "type": "verification",
+      "level": null,
+      "paragraph_count": 4,
+      "index": null,
+      "rows": 0,
+      "columns": 0,
+      "item_count": 0
+    }
+  ]
+}

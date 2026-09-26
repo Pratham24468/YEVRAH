@@ -1,27 +1,5 @@
-"""
-YEVRAH — End-to-end pipeline test
-
-Runs the full agent chain with real LLM calls:
-
-  Case Agent
-    → Template Agent
-      → Section Classifier
-        → Draft Synthesizer
-
-Prerequisites:
-  - Template with ID 1 must exist in the DB
-  - .env must have valid GROQ_API_KEY and OPENROUTER_API_KEY
-  - Qdrant must be reachable (evidence retrieval will return empty
-    if no documents are ingested — draft will still generate from
-    case facts alone, which is expected)
-
-Outputs:
-  - e2e_case_facts.json        — Case Agent output
-  - e2e_section_plan.json      — Section Classifier output
-  - e2e_draft.md               — Final draft from Synthesizer
-"""
-
 import json
+import re
 import sys
 import time
 from pathlib import Path
@@ -31,55 +9,23 @@ from model_db.template_model import Template
 
 from agent.nodes.case_agent import analyze_case
 from agent.nodes.template_agent import analyze_template
+from agent.nodes.mismatch_guard import check_template_match, TemplateMismatchError
 from agent.nodes.section_classifier import classify_sections
 from agent.nodes.draft_synthesizer import synthesize_draft
+from agent.nodes.structure_verifier import verify_structure
+from agent.nodes.verifier_node import verify_facts
 
 
-# ──────────────────────────────────────────────
-# HELPERS
-# ──────────────────────────────────────────────
-
-def header(title: str):
-    bar = "═" * 52
-    print(f"\n{bar}")
-    print(f"  {title}")
-    print(f"{bar}\n")
-
-
-def check(label: str):
-    print(f"  ✓  {label}")
-
-
-def fail(label: str, detail: str = ""):
-    print(f"\n  ✗  FAILED — {label}")
-    if detail:
-        print(f"     {detail}")
-    sys.exit(1)
-
-
-def save(path: str, content):
-    p = Path(path)
-    if isinstance(content, (dict, list)):
-        p.write_text(
-            json.dumps(content, indent=2, ensure_ascii=False),
-            encoding="utf-8",
-        )
-    else:
-        p.write_text(str(content), encoding="utf-8")
-    print(f"  →  Saved: {p.resolve()}")
-
-
-# ──────────────────────────────────────────────
-# CASE DATA
-# ──────────────────────────────────────────────
+TEMPLATE_ID = 1
+CASE_ID = 1
 
 CASE_DATA = {
     "title": "Money Recovery",
     "plaintiff": "Aarav Industrial Supplies Pvt. Ltd.",
     "defendant": "Zenith Engineering Works",
     "facts": """
-Aarav Industrial Supplies Pvt. Ltd. supplied industrial electrical
-components to Zenith Engineering Works.
+Aarav Industrial Supplies Pvt. Ltd. supplied industrial electrical components
+ to Zenith Engineering Works.
 
 The goods were supplied between 12 February 2026 and 28 March 2026.
 
@@ -102,18 +48,31 @@ until realisation.
     """,
 }
 
-# Change this if your template is stored under a different ID
-TEMPLATE_ID = 1
 
-# Set to the case_id that has documents ingested in Qdrant.
-# If no documents are ingested, evidence returns empty and the
-# draft generates from case facts alone — that's expected behaviour.
-CASE_ID = 1
+def header(title: str):
+    bar = "=" * 52
+    print(f"\n{bar}\n  {title}\n{bar}\n")
 
 
-# ──────────────────────────────────────────────
-# INITIAL STATE
-# ──────────────────────────────────────────────
+def check(label: str):
+    print(f"  [OK] {label}")
+
+
+def fail(label: str, detail: str = ""):
+    print(f"\n  [FAILED] {label}")
+    if detail:
+        print(f"     {detail}")
+    sys.exit(1)
+
+
+def save(path: str, content):
+    p = Path(path)
+    if isinstance(content, (dict, list)):
+        p.write_text(json.dumps(content, indent=2, ensure_ascii=False), encoding="utf-8")
+    else:
+        p.write_text(str(content), encoding="utf-8")
+    print(f"  ->  Saved: {p.resolve()}")
+
 
 def build_initial_state(template):
     return {
@@ -121,38 +80,37 @@ def build_initial_state(template):
         "template": template,
         "custom_prompt": "",
         "metadata": {"case_id": CASE_ID},
+        "case_id": CASE_ID,
         "status": "started",
-
         "case_facts": {},
+        "template_structure": {},
         "parameterized_template": "",
-
         "document_plan": {},
         "retrieved_knowledge": [],
         "draft": "",
         "review": {},
-
+        "structural_warnings": [],
+        "verification_warnings": [],
         "current_section": 0,
         "revision_count": 0,
     }
 
 
-# ──────────────────────────────────────────────
-# MAIN
-# ──────────────────────────────────────────────
+def assert_case_context(state, stage: str):
+    resolved = (state.get("metadata") or {}).get("case_id", state.get("case_id"))
+    if resolved is None:
+        fail(f"{stage} dropped case_id")
+    if str(resolved) != str(CASE_ID):
+        fail(f"{stage} has wrong case_id", f"Expected {CASE_ID}, got {resolved}.")
+
 
 def main():
     total_start = time.time()
-
-    # ── DB: load template ──────────────────────
     header("Loading template from DB")
 
     db = SessionLocal()
     try:
-        template = (
-            db.query(Template)
-            .filter(Template.id == TEMPLATE_ID)
-            .first()
-        )
+        template = db.query(Template).filter(Template.id == TEMPLATE_ID).first()
     finally:
         db.close()
 
@@ -160,149 +118,82 @@ def main():
         fail(f"Template ID {TEMPLATE_ID} not found in DB")
 
     check(f"Template loaded — '{template.name}' ({template.document_type})")
-    check(f"Markdown length: {len(template.markdown_content)} chars")
-
     state = build_initial_state(template)
 
-    # ── NODE 1: Case Agent ─────────────────────
     header("Node 1 — Case Agent")
     t = time.time()
-
     state = analyze_case(state)
-
-    elapsed = round(time.time() - t, 1)
-    case_facts = state["case_facts"]
-
-    if not case_facts:
+    assert_case_context(state, "Case Agent")
+    if not state.get("case_facts"):
         fail("Case Agent returned empty case_facts")
+    check(f"case_facts extracted ({round(time.time() - t, 1)}s)")
+    save("e2e_case_facts.json", state["case_facts"])
 
-    check(f"case_facts extracted  ({elapsed}s)")
-    check(f"Status: {state['status']}")
-
-    top_keys = [k for k, v in case_facts.items() if v]
-    check(f"Non-empty categories: {top_keys}")
-
-    parties = case_facts.get("parties", [])
-    financials = case_facts.get("financials", [])
-    check(f"Parties: {[p.get('name') for p in parties]}")
-    check(f"Financials: {financials}")
-
-    save("e2e_case_facts.json", case_facts)
-
-    # ── NODE 2: Template Agent ─────────────────
-    header("Node 2 — Template Agent")
+    header("Node 2 — Template Structure Agent")
     t = time.time()
-
     state = analyze_template(state)
+    assert_case_context(state, "Template Structure Agent")
+    structure = state.get("template_structure") or {}
+    blocks = structure.get("blocks", [])
+    if not blocks:
+        fail("Template Structure Agent returned no blocks")
+    check(f"Structure extracted ({round(time.time() - t, 1)}s)")
+    check(f"Structural blocks found: {len(blocks)}")
+    print(state["parameterized_template"])
+    save("e2e_template_structure.json", structure)
 
-    elapsed = round(time.time() - t, 1)
-    pt = state["parameterized_template"]
-
-    if not pt:
-        fail("Template Agent returned empty parameterized_template")
-
-    import re
-    placeholders = re.findall(r"\[[A-Z_]+\]", pt)
-    unique_placeholders = sorted(set(placeholders))
-
-    check(f"Parameterized template generated  ({elapsed}s)")
-    check(f"Length: {len(pt)} chars")
-    check(f"Status: {state['status']}")
-    check(f"Placeholders found ({len(unique_placeholders)}): "
-          f"{unique_placeholders}")
-
-    # ── NODE 3: Section Classifier ─────────────
-    header("Node 3 — Section Classifier")
+    header("Node 3 — Template Structure Guard")
     t = time.time()
+    try:
+        state = check_template_match(state)
+    except TemplateMismatchError as exc:
+        fail("Template structure invalid", str(exc))
+    check(f"Structure contract confirmed ({round(time.time() - t, 1)}s)")
 
+    header("Node 4 — Section Classifier")
+    t = time.time()
     state = classify_sections(state)
-
-    elapsed = round(time.time() - t, 1)
-    sections = state["document_plan"]["sections"]
-
+    assert_case_context(state, "Section Classifier")
+    sections = state.get("document_plan", {}).get("sections", [])
     if not sections:
         fail("Section Classifier returned no sections")
-
-    check(f"{len(sections)} sections classified  ({elapsed}s)")
-    check(f"Status: {state['status']}")
-
-    print()
-    for s in sections:
-        print(f"  [{s['id']}] {s['name']}")
-        print(f"       placeholders : {s.get('placeholders')}")
-        print(f"       categories   : {s.get('case_fact_categories')}")
-        print(f"       query        : {s.get('evidence_query')}")
-        print()
-
-    # placeholder coverage check
-    classified = {p for s in sections for p in s.get("placeholders", [])}
-    orphaned = [p for p in unique_placeholders if p not in classified]
-    if orphaned:
-        print(f"  ⚠   Placeholders not assigned to any section: {orphaned}")
-    else:
-        check("All template placeholders assigned to a section")
-
-    invented = [p for p in classified if p not in unique_placeholders]
-    if invented:
-        print(f"  ⚠   Classifier invented placeholders not in template: "
-              f"{invented}")
-    else:
-        check("No invented placeholders")
-
+    check(f"{len(sections)} sections classified ({round(time.time() - t, 1)}s)")
     save("e2e_section_plan.json", state["document_plan"])
 
-    # ── NODE 4: Draft Synthesizer ──────────────
-    header("Node 4 — Draft Synthesizer")
+    header("Node 5 — Draft Synthesizer")
     t = time.time()
-
     state = synthesize_draft(state)
-
-    elapsed = round(time.time() - t, 1)
-    draft = state["draft"]
-    evidence = state["retrieved_knowledge"]
-
+    assert_case_context(state, "Draft Synthesizer")
+    draft = state.get("draft", "")
     if not draft:
         fail("Draft Synthesizer returned empty draft")
-
-    check(f"Draft generated  ({elapsed}s)")
+    check(f"Draft generated ({round(time.time() - t, 1)}s)")
     check(f"Draft length: {len(draft)} chars")
-    check(f"Status: {state['status']}")
-
-    if evidence:
-        check(f"Evidence chunks retrieved: {len(evidence)}")
-        for e in evidence:
-            print(f"       [{e.get('section')}] "
-                  f"{e.get('source')} — "
-                  f"{str(e.get('text', ''))[:70]}...")
-    else:
-        print("  ⚠   No evidence retrieved — Qdrant may have no ingested "
-              "documents for this case. Draft generated from case facts only.")
-
-    # remaining placeholder check
-    remaining = re.findall(r"\[[A-Z_]+\]", draft)
-    if remaining:
-        print(f"\n  ⚠   Unfilled placeholders in draft: "
-              f"{sorted(set(remaining))}")
-        print("       These are gaps — case facts or evidence didn't "
-              "cover them.")
-    else:
-        check("No unfilled placeholders in draft")
-
     save("e2e_draft.md", draft)
 
-    # ── SUMMARY ───────────────────────────────
+    header("Node 6 — Structure Verifier")
+    t = time.time()
+    state = verify_structure(state)
+    structural_warnings = state.get("structural_warnings", [])
+    check(f"Structure check complete ({round(time.time() - t, 1)}s)")
+    for warning in structural_warnings:
+        print(f"  [!!] {warning}")
+
+    header("Node 7 — Fact Verifier")
+    t = time.time()
+    state = verify_facts(state)
+    verification_warnings = state.get("verification_warnings", [])
+    check(f"Fact check complete ({round(time.time() - t, 1)}s)")
+    for warning in verification_warnings:
+        print(f"  [!!] {warning.get('claim')} — {warning.get('issue')}")
+
+    save("e2e_warnings.json", {
+        "structural_warnings": structural_warnings,
+        "verification_warnings": verification_warnings,
+    })
+
     total = round(time.time() - total_start, 1)
     header(f"Pipeline complete — {total}s total")
-
-    print("  Outputs written:")
-    print("    e2e_case_facts.json")
-    print("    e2e_section_plan.json")
-    print("    e2e_draft.md")
-    print()
-    print("  Read e2e_draft.md — check every number, date, and")
-    print("  party name against the case data above before")
-    print("  declaring the pipeline correct.")
-    print()
 
 
 if __name__ == "__main__":
