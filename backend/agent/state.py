@@ -4,7 +4,7 @@ from typing_extensions import TypedDict
 
 class draft_state(TypedDict):
 
-    # Orginal Input
+    # Original Input
     case_data: Any
     template: Any
     custom_prompt: str
@@ -22,6 +22,11 @@ class draft_state(TypedDict):
     review: dict
     structural_warnings: list[str]
     verification_warnings: list[dict]
+
+    # Repair / Patch Stages
+    repair_patches: list[dict]
+    final_draft: str
+    patch_report: dict
 
     # Control
     current_section: int
